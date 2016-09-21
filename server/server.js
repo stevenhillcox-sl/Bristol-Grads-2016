@@ -15,7 +15,6 @@ module.exports = function(port, client, googleAuthoriser) {
     app.get("/oauth", function(req, res) {
         googleAuthoriser.authorise(req, function(err, token) {
             if (!err) {
-                console.log("success");
                 adminSessions[token] = true;
                 res.cookie("sessionToken", token);
                 res.header("Location", "/#/dash");
@@ -23,8 +22,7 @@ module.exports = function(port, client, googleAuthoriser) {
             }
             else {
                 if (err.message === "Unauthorised user") {
-                    console.log("not you pal");
-                    res.header("Location", "/#/dash");
+                    res.header("Location", "/#/dash/unauthorised");
                     res.sendStatus(302);
                 } else {
                     console.log(err);

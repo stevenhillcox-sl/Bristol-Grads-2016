@@ -10,6 +10,11 @@ angular.module("TwitterWallApp").config(["$routeProvider", "$locationProvider",
                 controller: "AdminController"
 
             })
+            .when("/dash/:status", {
+                templateUrl: "/templates/adminTweetWall.html",
+                controller: "AdminController"
+
+            })
             .otherwise({
                 templateUrl: "/templates/clientTweetWall.html",
                 controller: "MainController"

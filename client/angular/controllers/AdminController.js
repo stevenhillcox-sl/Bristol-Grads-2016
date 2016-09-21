@@ -2,13 +2,14 @@
 
     angular.module("TwitterWallApp").controller("AdminController", AdminController);
 
-    AdminController.$inject = ["$scope", "adminDashDataService", "$sce", "tweetTextManipulationService"];
+    AdminController.$inject = ["$scope", "adminDashDataService", "$sce", "tweetTextManipulationService", "$routeParams"];
 
-    function AdminController($scope, adminDashDataService, $sce, tweetTextManipulationService) {
+    function AdminController($scope, adminDashDataService, $sce, tweetTextManipulationService, $routeParams) {
         $scope.loggedIn = false;
         $scope.ctrl = {};
         $scope.tweets = [];
         $scope.motd = "";
+        $scope.errorMessage = "";
 
         $scope.deleteTweet = adminDashDataService.deleteTweet;
 
@@ -16,6 +17,9 @@
             $scope.loggedIn = true;
         }, function () {
             adminDashDataService.getAuthUri().then(function (uri) {
+                if ($routeParams.status) {
+                    $scope.errorMessage = "This account is not authorised, please log in with an authorised account";
+                }
                 $scope.loginUri = uri;
             });
         });

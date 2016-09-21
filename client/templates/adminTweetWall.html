@@ -1,4 +1,5 @@
 <div ng-show="!loggedIn">
+    {{ errorMessage }}
     <a href="{{loginUri}}">Log in</a>
 </div>
 <div layout="row" layout-padding ng-show="loggedIn">

@@ -186,14 +186,14 @@ describe("Admin", function () {
             });
         });
 
-        it("GET /oauth responds with a redirect to /dash if authentication succeeds but user is not authorised", function (done) {
+        it("GET /oauth responds with a redirect to #/dash/unauthorised if authentication succeeds but user is not authorised", function (done) {
             sinon.stub(authoriser, "authorise", function(req, authCallback) {
                 authCallback(new Error("Unauthorised user"), null);
             });
 
             request(baseUrl + "/oauth", function(error, response, body) {
                 expect(response.statusCode).toEqual(200);
-                expect(response.request.uri.hash).toEqual("#/dash");
+                expect(response.request.uri.hash).toEqual("#/dash/unauthorised");
                 done();
             });
         });
