@@ -3,7 +3,7 @@ module.exports = function(client) {
     var tweetUpdates = [];
     var hashtags = ["#bristech", "#bristech2016"];
     var mentions = ["@bristech"];
-    var officialUsers = ["bristech"];
+    var officialUsers = ["Bristech"];
 
     function tweetType(tweet) {
         if (officialUsers.indexOf(tweet.user.name) !== -1) {
@@ -28,6 +28,9 @@ module.exports = function(client) {
         if (tweets.length === 0) {
             return;
         }
+        tweets.forEach(function(tweet) {
+            tweet.wallTag = tag;
+        });
         tweetUpdates.push({
             type: "new_tweets",
             since: new Date(),
