@@ -5,4 +5,10 @@
         ng-repeat="tweet in speakersTweets | orderBy : tweetDate : true track by $index"
         ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
+    <ng-include
+        src="'/templates/tweet.html'"
+        class="tweet"
+        ng-repeat="tweet in extraSpeakersTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
+    ></ng-include>
 </div>

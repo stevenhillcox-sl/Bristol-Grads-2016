@@ -9,6 +9,8 @@
                 visitorsTweets: "=",
                 speakersTweets: "=",
                 pinnedTweets: "=",
+                extraPinnedTweets: "=",
+                extraSpeakersTweets: "=",
                 admin: "=",
                 position: "@",
                 setDeletedStatus: "&",

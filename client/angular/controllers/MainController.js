@@ -16,6 +16,8 @@
         $scope.visitorsTweets = [];
         $scope.speakersTweets = [];
         $scope.pinnedTweets = [];
+        $scope.extraPinnedTweets = [];
+        $scope.extraSpeakersTweets = [];
         $scope.speakers = [];
 
         activate();
@@ -63,23 +65,35 @@
 
         function splitTweetsIntoCategories(tweets) {
             tweets = tweets.sort(compare);
-            tweets.forEach(function(tweet) {
-                if (!(tweet.deleted || tweet.blocked) || tweet.display) {
-                    if (tweet.pinned) {
+            for (var i = 0; i < tweets.length; i++) {
+                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                    if (tweets[i].pinned) {
                         if ($scope.pinnedTweets.length < 4) {
-                            $scope.pinnedTweets.push(tweet);
+                            $scope.pinnedTweets.push(tweets[i]);
+                            tweets.splice(i, 1);
+                            i--;
                         }
-                    } else if (tweet.wallPriority) {
+                    } else if (tweets[i].wallPriority) {
                         if ($scope.speakersTweets.length < 5) {
-                            $scope.speakersTweets.push(tweet);
+                            $scope.speakersTweets.push(tweets[i]);
+                            tweets.splice(i, 1);
+                            i--;
                         }
                     } else {
                         if ($scope.visitorsTweets.length < 5) {
-                            $scope.visitorsTweets.push(tweet);
+                            $scope.visitorsTweets.push(tweets[i]);
+                            tweets.splice(i, 1);
+                            i--;
                         }
                     }
                 }
-            });
+            }
+            if ($scope.speakersTweets.length < 5) {
+                $scope.extraSpeakersTweets = tweets.slice(0, 5 - $scope.speakersTweets.length);
+            }
+            if ($scope.pinnedTweets.length < 4) {
+                $scope.extraPinnedTweets = tweets.slice(0, 4 - $scope.pinnedTweets.length);
+            }
         }
 
         function compare(a, b) {

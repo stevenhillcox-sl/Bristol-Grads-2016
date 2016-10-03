@@ -8,4 +8,10 @@
         ng-repeat="tweet in pinnedTweets | orderBy : tweetDate : true track by $index"
         ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
+    <ng-include
+        src="'/templates/tweet.html'"
+        class="tweet"
+        ng-repeat="tweet in extraPinnedTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
+    ></ng-include>
 </div>
