@@ -13,6 +13,9 @@
         var vm = this;
 
         $scope.tweets = [];
+        $scope.visitorsTweets = [];
+        $scope.speakersTweets = [];
+        $scope.pinnedTweets = [];
         $scope.speakers = [];
 
         activate();
@@ -45,6 +48,7 @@
                     $scope.tweets = $scope.tweets.concat(results.tweets);
                     vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
                     $scope.tweets = $scope.setFlagsForTweets($scope.tweets, results.updates);
+                    splitTweetsIntoCategories($scope.tweets);
                 }
             });
         }
@@ -55,6 +59,37 @@
                     return arr[idx];
                 }
             }
+        }
+
+        function splitTweetsIntoCategories(tweets) {
+            tweets = tweets.sort(compare);
+            tweets.forEach(function(tweet) {
+                if (!(tweet.deleted || tweet.blocked) || tweet.display) {
+                    if (tweet.pinned) {
+                        if ($scope.pinnedTweets.length < 4) {
+                            $scope.pinnedTweets.push(tweet);
+                        }
+                    } else if (tweet.wallPriority) {
+                        if ($scope.speakersTweets.length < 5) {
+                            $scope.speakersTweets.push(tweet);
+                        }
+                    } else {
+                        if ($scope.visitorsTweets.length < 5) {
+                            $scope.visitorsTweets.push(tweet);
+                        }
+                    }
+                }
+            });
+        }
+
+        function compare(a, b) {
+            if (Date(a.created_at) < Date(b.created_at)) {
+                return -1;
+            }
+            if (Date(a.created_at) > Date(b.created_at)) {
+                return 1;
+            }
+            return 0;
         }
 
         $scope.setFlagsForTweets = function(tweets, updates) {

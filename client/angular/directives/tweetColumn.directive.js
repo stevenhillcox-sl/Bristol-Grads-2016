@@ -6,6 +6,9 @@
             restrict: "E",
             scope: {
                 tweets: "=",
+                visitorsTweets: "=",
+                speakersTweets: "=",
+                pinnedTweets: "=",
                 admin: "=",
                 position: "@",
                 setDeletedStatus: "&",

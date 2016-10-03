@@ -1,7 +1,8 @@
 <div layout="column" class="column">
     <ng-include
         src="'/templates/tweet.html'"
-        ng-repeat="tweet in getTweets() | orderBy : tweetDate : true track by $index"
+        class="tweet"
+        ng-repeat="tweet in speakersTweets | orderBy : tweetDate : true track by $index"
         ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
 </div>
