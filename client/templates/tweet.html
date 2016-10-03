@@ -1,5 +1,5 @@
-<md-card>
-    <md-card-header>
+<md-card class="tweet-container">
+    <md-card-header style="margin: 0px; padding: 0px; height: 30%">
         <md-card-avatar>
             <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar" />
         </md-card-avatar>
@@ -20,10 +20,10 @@
         </md-card-icon-actions>
     </md-card-header>
     <img class="md-card-image tweet-media" ng-if="tweet.entities.media[0].media_url_https!==undefined" ng-src="{{tweet.entities.media[0].media_url_https}}"/>
-    <md-card-content>
+    <md-card-content style="margin: 0px;padding: 0px;  height: 50%">
         <div ng-bind-html="tweet.text"></div>
     </md-card-content>
-    <md-card-footer>
+    <md-card-footer style="margin: 0px;padding: 0px;  height: 20%">
         <div layout="row" layout-align="end center" layout-wrap>
             <div layout="row" layout-align="start center" flex>
                 <span class="md-subhead" am-time-ago="tweet.created_at | amParse:'ddd MMM DD HH:mm:ss ZZZZZ yyyy'">

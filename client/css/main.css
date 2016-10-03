@@ -2,12 +2,23 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+html, body, .view { 
+	height: 100%; 
+	width: 100%; 
+	margin: 0; 
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
+	height: 100%;
+	width: 100%
+}
+
+.column {
 	height: 100%;
 }
 
@@ -18,6 +29,7 @@ html::-webkit-scrollbar {
 	align-items: center;
 	overflow-y: auto;
 	width: 33%;
+	height: 100%;
 }
 
 .banner-container {
@@ -61,18 +73,29 @@ html::-webkit-scrollbar {
 	margin-top: 0px !important;
 }
 
+.tweet {
+	height: 19%;
+	padding: 0px;
+}
+
+.tweet-container {
+	margin: 0px; 
+	height: 100%;
+}
+
 .disabled {
 	opacity: 0.5;
-	transition: 1.5s;
+	transition: .5s;
 }
 
 .enabled {
 	opacity: 1;
-	transition: 1.5s;
+	transition: .5s;
 }
 
 .blocked {
 	opacity: 0.5;
+	transition: .5s;
 }
 
 .pinned-button-selected {
