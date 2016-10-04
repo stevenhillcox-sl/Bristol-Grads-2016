@@ -1,9 +1,7 @@
 <md-card class="tweet-container">
-    
-    <div ng-class="{'half' : tweet.entities.media[0] !== undefined, 'full' : tweet.entities.media[0] === undefined}">
         <div style="height: 100%; position: relative">   
             <div class="tweet-inside">
-                <md-card-header style="margin: 0px; padding: 0px; height: 30%">
+                <md-card-header style="margin: 0px; padding: 0px;" ng-class="{'half-header' : tweet.entities.media[0] !== undefined, 'full-header' : tweet.entities.media[0] === undefined}">
                     <md-card-avatar style="height: 100%">
                         <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar" style="height: 100%" />
                     </md-card-avatar>
@@ -23,10 +21,13 @@
                         </md-button>
                     </md-card-icon-actions>
                 </md-card-header>
-                <md-card-content style="margin: 0px;padding: 0px;  height: 50%; overflow: hidden; display: flex; align-content: center; align-items: center;">
+                <md-card-content style="margin: 0px;padding: 0px; overflow: hidden; display: flex; align-content: center; align-items: center;"  ng-class="{'half-content' : tweet.entities.media[0] !== undefined, 'full-content' : tweet.entities.media[0] === undefined}">
                     <div ng-bind-html="tweet.text" style="margin: 0px;padding: 10px 0px; overflow: hidden;" ng-style="getSize(tweet.text)" ></div>
+                    <div ng-if="tweet.entities.media[0].media_url_https!==undefined">
+                        <img class="md-card-image tweet-media" ng-src="{{tweet.entities.media[0].media_url_https}}" style="max-height: 100%; max-width: 100%" />
+                    </div>
                 </md-card-content>
-                <md-card-footer style="margin: 0px;padding: 0px;  height: 20%;">
+                <md-card-footer style="margin: 0px;padding: 0px;" ng-class="{'half-footer' : tweet.entities.media[0] !== undefined, 'full-footer' : tweet.entities.media[0] === undefined}">
                     <div layout="row" layout-align="end center" layout-wrap>
                         <div layout="row" layout-align="start center" flex>
                             <span class="md-subhead" am-time-ago="tweet.created_at | amParse:'ddd MMM DD HH:mm:ss ZZZZZ yyyy'">
@@ -37,9 +38,5 @@
                     </div>
                 </md-card-footer>
             </div>
-        </div>
-        <div ng-if="tweet.entities.media[0].media_url_https!==undefined" style="height: 50%">
-                <img class="md-card-image tweet-media" ng-src="{{tweet.entities.media[0].media_url_https}}" style="max-height: 100%; max-width: 100%" />
-        </div>
     </div>
 </md-card>

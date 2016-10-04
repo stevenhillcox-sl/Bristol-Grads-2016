@@ -94,6 +94,30 @@ html, body, .view {
 	height: 100%;
 }
 
+.half-header {
+	height: 15%;
+}
+
+.full-header {
+	height: 30%
+}
+
+.half-content {
+	height: 75%;
+}
+
+.full-content {
+	height: 50%
+}
+
+.half-footer {
+	height: 10%;
+}
+
+.full-footer {
+	height: 20%
+}
+
 .tweet-container {
 	margin: 0px; 
 	height: 100%;
