@@ -63,6 +63,11 @@
         }
 
         function splitTweetsIntoCategories(tweets) {
+            $scope.visitorsTweets = [];
+            $scope.speakersTweets = [];
+            $scope.pinnedTweets = [];
+            $scope.extraPinnedTweets = [];
+            $scope.extraSpeakersTweets = [];
             var pinnedCount = 0;
             var visitorsCount = 0;
             var speakersCount = 0;
@@ -74,49 +79,25 @@
                     if (tweets[i].pinned) {
                         if (pinnedCount + tweetCount < 5) {
                             $scope.pinnedTweets.push(tweets[i]);
-                            tweets.splice(i, 1);
                             pinnedCount += tweetCount;
-                            i--;
                         }
                     } else if (tweets[i].wallPriority) {
                         if (speakersCount + tweetCount < 6) {
                             $scope.speakersTweets.push(tweets[i]);
-                            tweets.splice(i, 1);
                             speakersCount += tweetCount;
-                            i--;
                         }
                     } else {
                         if (visitorsCount + tweetCount < 6) {
                             $scope.visitorsTweets.push(tweets[i]);
-                            tweets.splice(i, 1);
                             visitorsCount += tweetCount;
-                            i--;
-                        }
-                    }
-                }
-            }
-            if (speakersCount < 6) {
-                for (i = 0; i < 6 - speakersCount; i++) {
-                    tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
-                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || tweets[i].pinned) {
-                        if (speakersCount + tweetCount < 6) {
-                            $scope.extraSpeakersTweets.push(tweets[i]);
-                            tweets.splice(i, 1);
-                            speakersCount += tweetCount;
-                            i--;
-                        }
-                    }
-                }
-            }
-            if (pinnedCount < 5) {
-                for (i = 0; i < 5 - pinnedCount; i++) {
-                    tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
-                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || tweets[i].wallPriority) {
-                        if (pinnedCount + tweetCount < 5) {
-                            $scope.extraPinnedTweets.push(tweets[i]);
-                            tweets.splice(i, 1);
-                            pinnedCount += tweetCount;
-                            i--;
+                        } else {
+                            if (speakersCount + tweetCount < 6) {
+                                $scope.extraSpeakersTweets.push(tweets[i]);
+                                speakersCount += tweetCount;
+                            } else if (pinnedCount + tweetCount < 5) {
+                                $scope.extraPinnedTweets.push(tweets[i]);
+                                pinnedCount += tweetCount;
+                            }
                         }
                     }
                 }
