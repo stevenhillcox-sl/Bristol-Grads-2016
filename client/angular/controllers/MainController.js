@@ -50,7 +50,6 @@
                     $scope.tweets = $scope.tweets.concat(results.tweets);
                     vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
                     $scope.tweets = $scope.setFlagsForTweets($scope.tweets, results.updates);
-                    splitTweetsIntoCategories($scope.tweets);
                 }
             });
         }
@@ -69,7 +68,6 @@
             var speakersCount = 0;
             var tweetCount;
             var i;
-            tweets = tweets.sort(compare);
             for (i = 0; i < tweets.length; i++) {
                 tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
                 if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
@@ -97,10 +95,10 @@
                     }
                 }
             }
-            if (speakersCount < 5) {
-                for (i = 0; i < 5 - speakersCount; i++) {
+            if (speakersCount < 6) {
+                for (i = 0; i < 6 - speakersCount; i++) {
                     tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
-                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || tweets[i].pinned) {
                         if (speakersCount + tweetCount < 6) {
                             $scope.extraSpeakersTweets.push(tweets[i]);
                             tweets.splice(i, 1);
@@ -109,12 +107,11 @@
                         }
                     }
                 }
-                $scope.extraSpeakersTweets = tweets.slice(0, 5 - $scope.speakersTweets.length);
             }
             if (pinnedCount < 5) {
                 for (i = 0; i < 5 - pinnedCount; i++) {
                     tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
-                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || tweets[i].wallPriority) {
                         if (pinnedCount + tweetCount < 5) {
                             $scope.extraPinnedTweets.push(tweets[i]);
                             tweets.splice(i, 1);
@@ -127,10 +124,10 @@
         }
 
         function compare(a, b) {
-            if (Date(a.created_at) < Date(b.created_at)) {
+            if (new Date(a.created_at) > new Date(b.created_at)) {
                 return -1;
             }
-            if (Date(a.created_at) > Date(b.created_at)) {
+            if (new Date(a.created_at) < new Date(b.created_at)) {
                 return 1;
             }
             return 0;
@@ -168,6 +165,8 @@
                     });
                 }
             });
+            tweets = tweets.sort(compare);
+            splitTweetsIntoCategories(tweets);
             return tweets;
         };
     }
