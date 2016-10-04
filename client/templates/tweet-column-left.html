@@ -1,17 +1,19 @@
 <div layout="column" class="column">
-    <md-whiteframe class="md-whiteframe-13dp banner-container">
+    <div class="tweet">
 		<img src="../assets/Bristech-Banner.png" class="banner" />
-	</md-whiteframe>
+	</div>
 	<ng-include
         src="'/templates/tweet.html'"
         class="tweet"
         ng-repeat="tweet in pinnedTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{'tweet-image' : tweet.entities.media[0] !== undefined, 'tweet' : tweet.entities.media[0] === undefined}"
         ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
     <ng-include
         src="'/templates/tweet.html'"
         class="tweet"
         ng-repeat="tweet in extraPinnedTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{'tweet-image' : tweet.entities.media[0] !== undefined, 'tweet' : tweet.entities.media[0] === undefined}"
         ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
 </div>

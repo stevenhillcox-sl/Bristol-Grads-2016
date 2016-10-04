@@ -64,35 +64,65 @@
         }
 
         function splitTweetsIntoCategories(tweets) {
+            var pinnedCount = 0;
+            var visitorsCount = 0;
+            var speakersCount = 0;
+            var tweetCount;
+            var i;
             tweets = tweets.sort(compare);
-            for (var i = 0; i < tweets.length; i++) {
+            for (i = 0; i < tweets.length; i++) {
+                tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
                 if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
                     if (tweets[i].pinned) {
-                        if ($scope.pinnedTweets.length < 4) {
+                        if (pinnedCount + tweetCount < 5) {
                             $scope.pinnedTweets.push(tweets[i]);
                             tweets.splice(i, 1);
+                            pinnedCount += tweetCount;
                             i--;
                         }
                     } else if (tweets[i].wallPriority) {
-                        if ($scope.speakersTweets.length < 5) {
+                        if (speakersCount + tweetCount < 6) {
                             $scope.speakersTweets.push(tweets[i]);
                             tweets.splice(i, 1);
+                            speakersCount += tweetCount;
                             i--;
                         }
                     } else {
-                        if ($scope.visitorsTweets.length < 5) {
+                        if (visitorsCount + tweetCount < 6) {
                             $scope.visitorsTweets.push(tweets[i]);
                             tweets.splice(i, 1);
+                            visitorsCount += tweetCount;
                             i--;
                         }
                     }
                 }
             }
-            if ($scope.speakersTweets.length < 5) {
+            if (speakersCount < 5) {
+                for (i = 0; i < 5 - speakersCount; i++) {
+                    tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
+                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                        if (speakersCount + tweetCount < 6) {
+                            $scope.extraSpeakersTweets.push(tweets[i]);
+                            tweets.splice(i, 1);
+                            speakersCount += tweetCount;
+                            i--;
+                        }
+                    }
+                }
                 $scope.extraSpeakersTweets = tweets.slice(0, 5 - $scope.speakersTweets.length);
             }
-            if ($scope.pinnedTweets.length < 4) {
-                $scope.extraPinnedTweets = tweets.slice(0, 4 - $scope.pinnedTweets.length);
+            if (pinnedCount < 5) {
+                for (i = 0; i < 5 - pinnedCount; i++) {
+                    tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
+                    if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                        if (pinnedCount + tweetCount < 5) {
+                            $scope.extraPinnedTweets.push(tweets[i]);
+                            tweets.splice(i, 1);
+                            pinnedCount += tweetCount;
+                            i--;
+                        }
+                    }
+                }
             }
         }
 

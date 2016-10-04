@@ -13,6 +13,7 @@
                 extraSpeakersTweets: "=",
                 admin: "=",
                 position: "@",
+                hasImage: "&",
                 setDeletedStatus: "&",
                 addBlockedUser: "&",
                 setPinnedStatus: "&",

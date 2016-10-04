@@ -22,6 +22,11 @@ html, body, .view {
 	height: 100%;
 }
 
+.banner {
+	width: 100%;
+	height: 100%;
+}
+
 .column-container {
 	display: flex;
 	flex-direction: column;
@@ -30,16 +35,6 @@ html, body, .view {
 	overflow-y: auto;
 	width: 33%;
 	height: 100%;
-}
-
-.banner-container {
-	width: 90%; 
-	margin: 30px; 
-	background-color: black;
-}
-
-.banner {
-	width: 100%;
 }
 
 .admin-container {
@@ -75,6 +70,13 @@ html, body, .view {
 
 .tweet {
 	height: 19%;
+	padding: 0px;
+	margin: 0px;
+	width: 100%
+}
+
+.tweet-image {
+	height: 38%;
 	padding: 0px;
 }
 
