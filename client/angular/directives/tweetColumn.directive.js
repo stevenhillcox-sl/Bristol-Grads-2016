@@ -23,6 +23,13 @@
                 return "templates/tweet-column-" + attrs.position + ".html";
             },
             link: function(scope, element, attrs) {
+                scope.getSize = function(text) {
+                    var size = {
+                        "font-size": 1.8 - (text.split("").length / 160) + "vw"
+                    };
+                    console.log(size);
+                    return size;
+                };
                 scope.getTweets = function() {
                     return (scope.admin ? scope.tweets : scope.tweets.filter(function(tweet) {
                         return (!(tweet.deleted || tweet.blocked) || tweet.display);
