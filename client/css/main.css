@@ -76,12 +76,22 @@ html, body, .view {
 	height: 19%;
 	padding: 0px;
 	margin: 0px;
-	width: 95%
+	width: 95%;
 }
 
 .tweet-image {
-	height: 38%;
+	height: 39%;
 	padding: 0px;
+	margin: 0px;
+	width: 95%;
+}
+
+.half {
+	height: 50%;
+}
+
+.full {
+	height: 100%;
 }
 
 .tweet-container {
@@ -90,8 +100,11 @@ html, body, .view {
 }
 
 .tweet-inside {
-	margin: 16px;
+	padding: 16px;
+	display: block; 
+	box-sizing: border-box;
 	height: 100%;
+	width: 100%;
 }
 
 .disabled {
