@@ -23,8 +23,9 @@ html, body, .view {
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-start;
-	background-color: rgb(104, 183, 252);
-	width: 100%
+	background-color: red;
+	overflow-y: auto;
+	width: 100%;
 }
 
 .column {
@@ -101,9 +102,4 @@ html, body, .view {
 	border-bottom: 3px solid black;
 	transition: 1s;
 	margin: 10px 120px;
-}
-
-.tweet-media { 
-	max-height: 500px;
-	object-fit: cover;
 }
