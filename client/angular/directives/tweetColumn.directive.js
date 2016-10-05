@@ -12,6 +12,7 @@
                 extraPinnedTweets: "=",
                 extraSpeakersTweets: "=",
                 admin: "=",
+                switch: "=",
                 position: "@",
                 hasImage: "&",
                 setDeletedStatus: "&",
@@ -20,7 +21,9 @@
                 displayBlockedTweet: "&",
             },
             templateUrl: function(element, attrs) {
-                return "templates/tweet-column-" + attrs.position + ".html";
+                var admin = "templates/tweet-column-" + attrs.position + "-admin.html";
+                var client = "templates/tweet-column-" + attrs.position + ".html";
+                return client;
             },
             link: function(scope, element, attrs) {
                 scope.getSize = function(text) {

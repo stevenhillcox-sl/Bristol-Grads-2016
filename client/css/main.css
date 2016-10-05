@@ -18,6 +18,15 @@ html, body, .view {
 	width: 100%
 }
 
+.container-admin {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-start;
+	background-color: rgb(104, 183, 252);
+	width: 100%
+}
+
 .column {
 	height: 100%;
 	display: flex;
@@ -36,9 +45,16 @@ html, body, .view {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	overflow-y: auto;
 	width: 33%;
 	height: 100%;
+}
+
+.column-container-admin {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 33%;
 }
 
 .admin-container {
@@ -55,7 +71,10 @@ html, body, .view {
 	height:90%; 
 	width: 100%; 
 	overflow-y: auto; 
-	border: 2px solid black; 
+	border-top: 2px solid black; 
+	border-bottom: 2px solid black; 
+	border-right: 0px solid black; 
+	border-left: 0px solid black; 
 	border-radius: 5px;
 }
 
@@ -79,8 +98,11 @@ html, body, .view {
 	width: 95%;
 }
 
-.all {
-	margin: 10px 0px !important;
+.tweet-admin {
+	height: 19%;
+	padding: 0px;
+	margin: 10px;
+	width: 95%;
 }
 
 .tweet-image {
@@ -88,6 +110,17 @@ html, body, .view {
 	padding: 0px;
 	margin: 0px;
 	width: 95%;
+}
+
+.tweet-image-admin {
+	height: 39%;
+	padding: 0px;
+	margin: 10px;
+	width: 95%;
+}
+
+.all {
+	margin: 1% 0% !important;
 }
 
 .half {
