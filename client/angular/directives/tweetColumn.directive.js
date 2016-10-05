@@ -25,7 +25,7 @@
             link: function(scope, element, attrs) {
                 scope.getSize = function(text) {
                     var size = {
-                        "font-size": 1.8 - (text.split("").length / 160) + "vw"
+                        "font-size": 1.8 - (text.toString().split("").length / 160) + "vw"
                     };
                     console.log(size);
                     return size;
