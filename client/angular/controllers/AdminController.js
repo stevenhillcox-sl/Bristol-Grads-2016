@@ -22,10 +22,18 @@
         $scope.errorMessage = "";
         $scope.blockedUsers = [];
 
+        $scope.visitorsTweets = [];
+        $scope.speakersTweets = [];
+        $scope.pinnedTweets = [];
+        $scope.extraPinnedTweets = [];
+        $scope.extraSpeakersTweets = [];
+
         $scope.setDeletedStatus = adminDashDataService.setDeletedStatus;
         $scope.setPinnedStatus = adminDashDataService.setPinnedStatus;
         $scope.addSpeaker = addSpeaker;
         $scope.removeSpeaker = removeSpeaker;
+        $scope.switch = false;
+        var hasChanged = false;
 
         $scope.displayBlockedTweet = adminDashDataService.displayBlockedTweet;
 
@@ -77,6 +85,12 @@
             });
         }
 
+        $scope.check = function(value) {
+            hasChanged = true;
+            $scope.switch = !value;
+            console.log($scope.switch);
+        };
+
         function pageUpdate() {
             updateTweets();
             adminDashDataService.getSpeakers().then(function(speakers) {
@@ -88,7 +102,7 @@
 
         function updateTweets() {
             adminDashDataService.getTweets(vm.latestUpdateTime).then(function(results) {
-                if (results.updates.length > 0) {
+                if (results.updates.length > 0 || hasChanged) {
                     if (results.tweets.length > 0) {
                         results.tweets.forEach(function(tweet) {
                             tweet.text = $sce.trustAsHtml(tweetTextManipulationService.updateTweet(tweet));
@@ -98,7 +112,9 @@
                         });
                     }
                     $scope.tweets = $scope.tweets.concat(results.tweets);
-                    vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
+                    if (results.updates.length > 0) {
+                        vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
+                    }
                     $scope.tweets = $scope.setFlagsForTweets($scope.tweets, results.updates);
                 }
             });
@@ -129,6 +145,70 @@
             }
         }
 
+        function splitTweetsIntoCategories(tweets) {
+            $scope.visitorsTweets = [];
+            $scope.speakersTweets = [];
+            $scope.pinnedTweets = [];
+            $scope.extraPinnedTweets = [];
+            $scope.extraSpeakersTweets = [];
+            hasChanged = false;
+            var pinnedCount = 0;
+            var visitorsCount = 0;
+            var speakersCount = 0;
+            var tweetCount;
+            var i;
+            for (i = 0; i < tweets.length; i++) {
+                tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
+
+                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || $scope.switch) {
+                    if (tweets[i].pinned) {
+                        if (pinnedCount + tweetCount < 5) {
+                            $scope.pinnedTweets.push(tweets[i]);
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                pinnedCount += tweetCount;
+                            }
+                        }
+                    } else if (tweets[i].wallPriority) {
+                        if (speakersCount + tweetCount < 6) {
+                            $scope.speakersTweets.push(tweets[i]);
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                speakersCount += tweetCount;
+                            }
+                        }
+                    } else {
+                        if (visitorsCount + tweetCount < 6) {
+                            $scope.visitorsTweets.push(tweets[i]);
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                visitorsCount += tweetCount;
+                            }
+                        } else {
+                            if (speakersCount + tweetCount < 6) {
+                                $scope.extraSpeakersTweets.push(tweets[i]);
+                                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                    speakersCount += tweetCount;
+                                }
+                            } else if (pinnedCount + tweetCount < 5) {
+                                $scope.extraPinnedTweets.push(tweets[i]);
+                                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                    pinnedCount += tweetCount;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function compare(a, b) {
+            if (new Date(a.created_at) > new Date(b.created_at)) {
+                return -1;
+            }
+            if (new Date(a.created_at) < new Date(b.created_at)) {
+                return 1;
+            }
+            return 0;
+        }
+
         $scope.setFlagsForTweets = function(tweets, updates) {
             updates.forEach(function(update) {
                 if (update.type === "tweet_status") {
@@ -140,15 +220,29 @@
                             updatedTweet[prop] = update.status[prop];
                         }
                     }
-                }
-                if (update.type === "user_block") {
+                } else if (update.type === "user_block") {
                     tweets.forEach(function(tweet) {
                         if (tweet.user.screen_name === update.screen_name) {
                             tweet.blocked = update.blocked;
                         }
                     });
+                } else if (update.type === "speaker_update") {
+                    var wallPriority;
+                    if (update.operation === "add") {
+                        wallPriority = true;
+                    } else if (update.operation === "remove") {
+                        wallPriority = false;
+                    }
+                    tweets.forEach(function(tweet) {
+                        if (tweet.user.screen_name === update.screen_name) {
+                            tweet.wallPriority = wallPriority;
+                        }
+                        return tweet;
+                    });
                 }
             });
+            tweets = tweets.sort(compare);
+            splitTweetsIntoCategories(tweets);
             return tweets;
         };
     }

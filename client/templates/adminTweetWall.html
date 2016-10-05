@@ -2,7 +2,59 @@
 <md-content class="admin-container">
     <ng-include src="'/templates/adminMenu.html'" ng-show="loggedIn"></ng-include>
     <div class="admin-container-inside">
-        <ng-include src="'/templates/clientTweetWall.html'" ng-show="loggedIn"></ng-include>
+        	<div ng-class="{'container-admin': switch, 'container': !switch}" ng-show="loggedIn">
+			    <tweet-column
+			        position="left"
+			        tweets="tweets"
+			        visitors-tweets="visitorsTweets"
+			        speakers-tweets="speakersTweets"
+			        pinned-tweets="pinnedTweets"
+			        extra-pinned-tweets="extraPinnedTweets"
+			        extra-speakers-tweets="extraSpeakersTweets"
+			        admin="loggedIn"
+			        switch="switch"
+			        get-size="getSize"
+			        set-deleted-status="setDeletedStatus(id, status)"
+			        add-blocked-user="addBlockedUser(name, screen_name)"
+			        set-pinned-status="setPinnedStatus(id, status)"
+			        display-blocked-tweet="displayBlockedTweet(id)"
+			        ng-class="{'column-container-admin': switch, 'column-container': !switch}"
+			    ></tweet-column>
+			    <tweet-column
+			        position="middle"
+			        tweets="tweets"
+			        switch="switch"
+			        visitors-tweets="visitorsTweets"
+			        speakers-weets="speakersTweets"
+			        pinned-tweets="pinnedTweets"
+			        extra-pinned-tweets="extraPinnedTweets"
+			        extra-speakers-tweets="extraSpeakersTweets"
+			        admin="loggedIn"
+			        get-size="getSize"
+			        set-deleted-status="setDeletedStatus(id, status)"
+			        add-blocked-user="addBlockedUser(name, screen_name)"
+			        set-pinned-status="setPinnedStatus(id, status)"
+			        display-blocked-tweet="displayBlockedTweet(id)"
+			        ng-class="{'column-container-admin': switch, 'column-container': !switch}"
+			    ></tweet-column>
+			    <tweet-column
+			        position="right"
+			        tweets="tweets"
+			        switch="switch"
+			        visitors-tweets="visitorsTweets"
+			        speakers-tweets="speakersTweets"
+			        pinned-tweets="pinnedTweets"
+			        extra-pinned-tweets="extraPinnedTweets"
+			        extra-speakers-tweets="extraSpeakersTweets"
+			        admin="loggedIn"
+			        get-size="getSize"
+			        set-deleted-status="setDeletedStatus(id, status)"
+			        add-blocked-user="addBlockedUser(name, screen_name)"
+			        set-pinned-status="setPinnedStatus(id, status)"
+			        display-blocked-tweet="displayBlockedTweet(id)"
+			        ng-class="{'column-container-admin': switch, 'column-container': !switch}"
+			    ></tweet-column>
+			</div>
         <div class="container" ng-show="!loggedIn">
         	<div style="text-align: center">
 	        	<div style="margin-top: 20%">In order to acess the dash board for this Twitter Wall you must be authorised</div>
