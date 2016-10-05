@@ -1,35 +1,32 @@
 <md-card class="tweet-container" ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'all': admin&&switch}"> 
-            <div class="tweet-inside">
-                <md-card-header style="margin: 4px; padding: 0px;" ng-class="{'half-header' : tweet.entities.media[0] !== undefined, 'full-header' : tweet.entities.media[0] === undefined}">
-                    <md-card-avatar style="height: 100%">
-                        <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar" />
-                    </md-card-avatar>
-                    <md-card-header-text style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                        <span class="md-headline">
-                        {{tweet.user.name}}</span>
-                        <span class="md-subhead">
-                            @{{tweet.user.screen_name}}
-                        </span>
-                    </md-card-header-text>
-                    <md-card-icon-actions ng-if="admin">
-                        <ng-include src="'/templates/tweet-admin-controls.html'"></ng-include>
-                    </md-card-icon-actions>
-                </md-card-header>
-                <md-card-content style="margin: 4px;padding: 0px; overflow: hidden; display: flex; align-content: center; align-items: center;"  ng-class="{'half-content' : tweet.entities.media[0] !== undefined, 'full-content' : tweet.entities.media[0] === undefined}">
-                    <div ng-bind-html="tweet.text" style="margin: 0px;padding: 10px 0px; overflow: hidden;" ng-style="getSize(tweet.text)" ></div>
-                    <div ng-if="tweet.entities.media[0].media_url_https!==undefined">
-                        <img class="md-card-image tweet-media" ng-src="{{tweet.entities.media[0].media_url_https}}" style="max-height: 100%; max-width: 100%" />
-                    </div>
-                </md-card-content>
-                <md-card-footer style="margin: 4px;padding: 0px;" ng-class="{'half-footer' : tweet.entities.media[0] !== undefined, 'full-footer' : tweet.entities.media[0] === undefined}">
-                    <div layout="row" layout-align="end center" layout-wrap>
-                        <div layout="row" layout-align="start center" flex>
-                            <span class="md-subhead" am-time-ago="tweet.created_at | amParse:'ddd MMM DD HH:mm:ss ZZZZZ yyyy'">
-                            </span>
-                        </div>
-                        <i class="material-icons md-18 fav-icon">favorite</i> &nbsp {{tweet.favorite_count}} &nbsp
-                        <i class="material-icons md-18 retweet-icon">cached</i> &nbsp {{tweet.retweet_count}}
-                    </div>
-                </md-card-footer>
-    </div>
+    <md-card-header class="tweet-header">
+        <md-card-avatar class="tweet-avatar">
+            <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar tweet-avatar" />
+        </md-card-avatar>
+        <md-card-header-text class="column-flex-around">
+            <span class="md-headline header-name">
+                {{tweet.user.name}}
+            </span>
+            <span class="md-subhead header-username">
+                @{{tweet.user.screen_name}}
+            </span>
+        </md-card-header-text>
+        <md-card-icon-actions ng-if="admin">
+            <ng-include src="'/templates/tweet-admin-controls.html'"></ng-include>
+        </md-card-icon-actions>
+    </md-card-header>
+    <md-card-content class="tweet-content">
+        <div ng-bind-html="tweet.text" ng-style="getSize(tweet.text)" ></div>
+        <div ng-if="hasImage(tweet)">
+            <img class="md-card-image tweet-media" ng-src="{{tweet.entities.media[0].media_url_https}}" class="img" />
+        </div>
+    </md-card-content>
+    <md-card-footer class="tweet-footer" layout="row" layout-align="end center" layout-wrap>
+            <div layout="row" layout-align="start center" flex>
+                <span class="md-subhead" am-time-ago="tweet.created_at | amParse:'ddd MMM DD HH:mm:ss ZZZZZ yyyy'">
+                </span>
+            </div>
+            <i class="material-icons md-18 fav-icon">favorite</i> &nbsp {{tweet.favorite_count}} &nbsp
+            <i class="material-icons md-18 retweet-icon">cached</i> &nbsp {{tweet.retweet_count}}
+    </md-card-footer>
 </md-card>

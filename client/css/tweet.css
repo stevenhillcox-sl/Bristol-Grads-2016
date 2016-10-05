@@ -1,0 +1,142 @@
+.tweet {
+	height: 170px;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+	border-radius: 15px;
+}
+
+.tweet-admin {
+	height: 150px;
+	padding: 0px;
+	margin: 10px;
+	width: 95%;
+	border-radius: 15px;
+}
+
+.tweet-image {
+	height: 370px;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+	border-radius: 15px;
+}
+
+.tweet-image-admin {
+	height: 350px;
+	padding: 0px;
+	margin: 10px;
+	width: 95%;
+	border-radius: 15px;
+}
+
+.all {
+	margin: 1% 0% !important;
+}
+
+.half {
+	height: 50%;
+}
+
+.full {
+	height: 100%;
+}
+
+.tweet-header {
+	height: 30px;
+	margin: 4px; 
+	margin-top: 0px;
+	padding: 0px;
+}
+
+.img {
+	max-height: 100%; 
+	max-width: 100%;
+	margin: 5px;
+}
+
+.column-flex-around {
+	display: flex; 
+	flex-direction: column; 
+	justify-content: space-around;
+}
+
+.header-name {
+	font-size: 18px; 
+	line-height: 18px;
+}
+
+.header-username {
+	line-height: 14px;
+}
+
+.tweet-avatar {
+	height: 100%;
+}
+
+.tweet-content {
+	height: 65px;
+	margin: 4px;
+	padding: 0px; 
+	display: flex; 
+	align-content: center; 
+	align-items: center;
+}
+
+.tweet-footer {
+	height: 20px;
+	margin: 4px;
+	padding: 0px;
+}
+
+.tweet-container {
+	margin: 0px; 
+	height: 100%;
+	padding: 16px;
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.disabled {
+	opacity: 0.5;
+	transition: .5s;
+}
+
+.enabled {
+	opacity: 1;
+	transition: .5s;
+}
+
+.blocked {
+	opacity: 0.5;
+	transition: .5s;
+}
+
+.pinned-button-selected {
+	color : #FFC400;
+}
+
+.delete-button-selected {
+	color : #FF1744;
+}
+
+.blocked-button-selected {
+	color : #FF1744;
+}
+
+b {
+	font-weight: 400;
+	color: #1b95e0;
+}
+
+.fav-icon {
+	color:#E81C4F;
+}
+
+.retweet-icon {
+	color:#19CF86
+}
+

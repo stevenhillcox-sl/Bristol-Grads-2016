@@ -14,7 +14,6 @@
                 admin: "=",
                 switch: "=",
                 position: "@",
-                hasImage: "&",
                 setDeletedStatus: "&",
                 addBlockedUser: "&",
                 setPinnedStatus: "&",
@@ -26,6 +25,9 @@
                 return client;
             },
             link: function(scope, element, attrs) {
+                scope.hasImage = function(tweet) {
+                    return tweet.entities.media !== undefined;
+                };
                 scope.getSize = function(text) {
                     var size;
                     var charCount = text.toString().split("").length;
