@@ -1,7 +1,8 @@
 <div style="display: inline;">
-    <div class="inset" ng-cloak style="display:inline;">
-        <md-switch ng-model="data.cb1" aria-label="Switch 1">
-        Switch 1: {{ data.cb1 }}
+    <div class="inset" ng-cloak style="display:inline; position: absolute; left: 10px">
+        <md-switch ng-model="data.cb1" aria-label="Switch 1" style="display:inline; margin: 10px 80px">
+            <div ng-show="data.cb1"> Show all</div>
+            <div ng-hide="data.cb1"> Show public</div>
         </md-switch>
     </div>
     <md-menu-bar style="display: inline;">
