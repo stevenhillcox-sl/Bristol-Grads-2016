@@ -32,6 +32,8 @@
         $scope.setPinnedStatus = adminDashDataService.setPinnedStatus;
         $scope.addSpeaker = addSpeaker;
         $scope.removeSpeaker = removeSpeaker;
+        $scope.switch = false;
+        var hasChanged = false;
 
         $scope.displayBlockedTweet = adminDashDataService.displayBlockedTweet;
 
@@ -83,6 +85,12 @@
             });
         }
 
+        $scope.check = function(value) {
+            hasChanged = true;
+            $scope.switch = !value;
+            console.log($scope.switch);
+        };
+
         function pageUpdate() {
             updateTweets();
             adminDashDataService.getSpeakers().then(function(speakers) {
@@ -94,7 +102,7 @@
 
         function updateTweets() {
             adminDashDataService.getTweets(vm.latestUpdateTime).then(function(results) {
-                if (results.updates.length > 0) {
+                if (results.updates.length > 0 || hasChanged) {
                     if (results.tweets.length > 0) {
                         results.tweets.forEach(function(tweet) {
                             tweet.text = $sce.trustAsHtml(tweetTextManipulationService.updateTweet(tweet));
@@ -104,7 +112,9 @@
                         });
                     }
                     $scope.tweets = $scope.tweets.concat(results.tweets);
-                    vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
+                    if (results.updates.length > 0) {
+                        vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
+                    }
                     $scope.tweets = $scope.setFlagsForTweets($scope.tweets, results.updates);
                 }
             });
@@ -141,6 +151,7 @@
             $scope.pinnedTweets = [];
             $scope.extraPinnedTweets = [];
             $scope.extraSpeakersTweets = [];
+            hasChanged = false;
             var pinnedCount = 0;
             var visitorsCount = 0;
             var speakersCount = 0;
@@ -148,7 +159,8 @@
             var i;
             for (i = 0; i < tweets.length; i++) {
                 tweetCount = tweets[i].entities.media !== undefined ? 2 : 1;
-                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+
+                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display || $scope.switch) {
                     if (tweets[i].pinned) {
                         if (pinnedCount + tweetCount < 5) {
                             $scope.pinnedTweets.push(tweets[i]);

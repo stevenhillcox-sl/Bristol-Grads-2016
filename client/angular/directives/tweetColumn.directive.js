@@ -27,7 +27,6 @@
                     var size = {
                         "font-size": 1.8 - (text.toString().split("").length / 160) + "vw"
                     };
-                    console.log(size);
                     return size;
                 };
                 scope.getTweets = function() {
