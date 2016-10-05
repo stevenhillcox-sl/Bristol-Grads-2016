@@ -164,24 +164,34 @@
                     if (tweets[i].pinned) {
                         if (pinnedCount + tweetCount < 5) {
                             $scope.pinnedTweets.push(tweets[i]);
-                            pinnedCount += tweetCount;
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                pinnedCount += tweetCount;
+                            }
                         }
                     } else if (tweets[i].wallPriority) {
                         if (speakersCount + tweetCount < 6) {
                             $scope.speakersTweets.push(tweets[i]);
-                            speakersCount += tweetCount;
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                speakersCount += tweetCount;
+                            }
                         }
                     } else {
                         if (visitorsCount + tweetCount < 6) {
                             $scope.visitorsTweets.push(tweets[i]);
-                            visitorsCount += tweetCount;
+                            if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                visitorsCount += tweetCount;
+                            }
                         } else {
                             if (speakersCount + tweetCount < 6) {
                                 $scope.extraSpeakersTweets.push(tweets[i]);
-                                speakersCount += tweetCount;
+                                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                    speakersCount += tweetCount;
+                                }
                             } else if (pinnedCount + tweetCount < 5) {
                                 $scope.extraPinnedTweets.push(tweets[i]);
-                                pinnedCount += tweetCount;
+                                if (!(tweets[i].deleted || tweets[i].blocked) || tweets[i].display) {
+                                    pinnedCount += tweetCount;
+                                }
                             }
                         }
                     }
