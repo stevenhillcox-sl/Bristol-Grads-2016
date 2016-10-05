@@ -5,11 +5,11 @@
 	<ng-include
         src="'/templates/tweet.html'"
         ng-repeat="tweet in pinnedTweets | orderBy : tweetDate : true track by $index"
-        ng-class="{'tweet-image' : tweet.entities.media[0] !== undefined, 'tweet' : tweet.entities.media[0] === undefined}"
+        ng-class="{'tweet-image' : hasImage(tweet), 'tweet' : !hasImage(tweet)}"
     ></ng-include>
     <ng-include
         src="'/templates/tweet.html'"
         ng-repeat="tweet in extraPinnedTweets | orderBy : tweetDate : true track by $index"
-        ng-class="{'tweet-image' : tweet.entities.media[0] !== undefined, 'tweet' : tweet.entities.media[0] === undefined}"
+        ng-class="{'tweet-image' : hasImage(tweet), 'tweet' : !hasImage(tweet)}"
     ></ng-include>
 </div>

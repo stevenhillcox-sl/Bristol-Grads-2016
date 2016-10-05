@@ -3,15 +3,7 @@
 	padding: 0px;
 	margin: 0px;
 	width: 95%;
-	border-radius: 15px;
-}
-
-.tweet-admin {
-	height: 150px;
-	padding: 0px;
-	margin: 10px;
-	width: 95%;
-	border-radius: 15px;
+	border-radius: 20px;
 }
 
 .tweet-image {
@@ -19,19 +11,11 @@
 	padding: 0px;
 	margin: 0px;
 	width: 95%;
-	border-radius: 15px;
-}
-
-.tweet-image-admin {
-	height: 350px;
-	padding: 0px;
-	margin: 10px;
-	width: 95%;
-	border-radius: 15px;
+	border-radius: 20px;
 }
 
 .all {
-	margin: 1% 0% !important;
+	margin: 10px 0px !important;
 }
 
 .half {
@@ -107,11 +91,6 @@
 
 .enabled {
 	opacity: 1;
-	transition: .5s;
-}
-
-.blocked {
-	opacity: 0.5;
 	transition: .5s;
 }
 
