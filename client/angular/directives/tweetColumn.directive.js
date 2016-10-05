@@ -27,10 +27,20 @@
             },
             link: function(scope, element, attrs) {
                 scope.getSize = function(text) {
-                    var size = {
-                        "font-size": 1.8 - (text.toString().split("").length / 160) + "vw"
+                    var size;
+                    var charCount = text.toString().split("").length;
+                    console.log(charCount);
+                    if (charCount < 85) {
+                        size = "x-large";
+                    } else if (charCount < 120) {
+                        size = "large";
+                    } else {
+                        size = "medium";
+                    }
+                    console.log(size);
+                    return {
+                        "font-size": size
                     };
-                    return size;
                 };
                 scope.getTweets = function() {
                     return (scope.admin ? scope.tweets : scope.tweets.filter(function(tweet) {
