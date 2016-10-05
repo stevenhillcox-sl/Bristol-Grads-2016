@@ -2,12 +2,32 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+html, body, .view { 
+	height: 100%; 
+	width: 100%; 
+	margin: 0; 
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
+	height: 100%;
+	width: 100%
+}
+
+.column {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.banner {
+	width: 100%;
 	height: 100%;
 }
 
@@ -18,16 +38,7 @@ html::-webkit-scrollbar {
 	align-items: center;
 	overflow-y: auto;
 	width: 33%;
-}
-
-.banner-container {
-	width: 90%; 
-	margin: 30px; 
-	background-color: black;
-}
-
-.banner {
-	width: 100%;
+	height: 100%;
 }
 
 .admin-container {
@@ -61,18 +72,78 @@ html::-webkit-scrollbar {
 	margin-top: 0px !important;
 }
 
+.tweet {
+	height: 19%;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+}
+
+.tweet-image {
+	height: 39%;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+}
+
+.half {
+	height: 50%;
+}
+
+.full {
+	height: 100%;
+}
+
+.half-header {
+	height: 15%;
+}
+
+.full-header {
+	height: 30%
+}
+
+.half-content {
+	height: 75%;
+}
+
+.full-content {
+	height: 50%
+}
+
+.half-footer {
+	height: 10%;
+}
+
+.full-footer {
+	height: 20%
+}
+
+.tweet-container {
+	margin: 0px; 
+	height: 100%;
+}
+
+.tweet-inside {
+	padding: 16px;
+	display: block; 
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+}
+
 .disabled {
 	opacity: 0.5;
-	transition: 1.5s;
+	transition: .5s;
 }
 
 .enabled {
 	opacity: 1;
-	transition: 1.5s;
+	transition: .5s;
 }
 
 .blocked {
 	opacity: 0.5;
+	transition: .5s;
 }
 
 .pinned-button-selected {
