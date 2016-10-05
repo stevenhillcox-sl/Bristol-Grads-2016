@@ -3,6 +3,5 @@
         src="'/templates/tweet.html'"
         ng-repeat="tweet in visitorsTweets | orderBy : tweetDate : true track by $index"
         ng-class="{'tweet-image' : tweet.entities.media[0] !== undefined, 'tweet' : tweet.entities.media[0] === undefined}"
-        ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}"
     ></ng-include>
 </div>

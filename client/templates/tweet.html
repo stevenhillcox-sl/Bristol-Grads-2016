@@ -1,4 +1,4 @@
-<md-card class="tweet-container">
+<md-card class="tweet-container" ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display}">
         <div style="height: 100%; position: relative">   
             <div class="tweet-inside">
                 <md-card-header style="margin: 0px; padding: 0px;" ng-class="{'half-header' : tweet.entities.media[0] !== undefined, 'full-header' : tweet.entities.media[0] === undefined}">

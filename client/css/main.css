@@ -79,6 +79,10 @@ html, body, .view {
 	width: 95%;
 }
 
+.all {
+	margin: 10px 0px !important;
+}
+
 .tweet-image {
 	height: 39%;
 	padding: 0px;
