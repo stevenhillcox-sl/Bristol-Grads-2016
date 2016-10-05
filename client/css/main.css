@@ -92,31 +92,35 @@ html, body, .view {
 }
 
 .tweet {
-	height: 19%;
+	height: 150px;
 	padding: 0px;
 	margin: 0px;
 	width: 95%;
+	border-radius: 15px;
 }
 
 .tweet-admin {
-	height: 19%;
+	height: 150px;
 	padding: 0px;
 	margin: 10px;
 	width: 95%;
+	border-radius: 15px;
 }
 
 .tweet-image {
-	height: 39%;
+	height: 350px;
 	padding: 0px;
 	margin: 0px;
 	width: 95%;
+	border-radius: 15px;
 }
 
 .tweet-image-admin {
-	height: 39%;
+	height: 350px;
 	padding: 0px;
 	margin: 10px;
 	width: 95%;
+	border-radius: 15px;
 }
 
 .all {
