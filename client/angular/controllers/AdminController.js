@@ -40,8 +40,13 @@
         $scope.switch = false;
         $scope.hasChanged = false;
         $scope.isMobile = false; //initiate as false
+        $scope.tab = 1;
 
         getDevice();
+
+        $scope.changeTab = function(value) {
+            $scope.tab = value;
+        };
 
         function getDevice() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

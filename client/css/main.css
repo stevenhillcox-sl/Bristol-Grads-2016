@@ -35,7 +35,8 @@ html, body, .view {
 	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
 	overflow-y: auto;
-	width: 100%;
+	width: 95%;
+	height: 100%;
 }
 
 .column {
