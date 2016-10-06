@@ -1,4 +1,4 @@
-<div ng-class="{'container-admin': loggedIn, container: !loggedIn}">
+<div ng-class="{'container-admin': loggedIn, container: !loggedIn, 'container-admin-mobile': isMobile}">
     <tweet-column
         position="left"
         tweets="tweets"
@@ -10,11 +10,12 @@
         admin="loggedIn"
         get-size="getSize"
         switch="switch"
+        is-mobile="isMobile"
         set-deleted-status="setDeletedStatus(id, status)"
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
         toggle-blocked="toggleBlocked(name, screen_name, blocked)"
     ></tweet-column>
     <tweet-column
@@ -27,18 +28,20 @@
         extra-speakers-tweets="extraSpeakersTweets"
         admin="loggedIn"
         switch="switch"
+        is-mobile="isMobile"
         get-size="getSize"
         set-deleted-status="setDeletedStatus(id, status)"
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
         toggle-blocked="toggleBlocked(name, screen_name, blocked)"
     ></tweet-column>
     <tweet-column
         position="right"
         tweets="tweets"
         switch="switch"
+        is-mobile="isMobile"
         visitors-tweets="visitorsTweets"
         speakers-tweets="speakersTweets"
         pinned-tweets="pinnedTweets"
@@ -50,7 +53,7 @@
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
         toggle-blocked="toggleBlocked(name, screen_name, blocked)"
     ></tweet-column>
 </div>

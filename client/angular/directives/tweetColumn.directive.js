@@ -13,6 +13,7 @@
                 extraSpeakersTweets: "=",
                 admin: "=",
                 switch: "=",
+                isMobile: "=",
                 position: "@",
                 setDeletedStatus: "&",
                 addBlockedUser: "&",

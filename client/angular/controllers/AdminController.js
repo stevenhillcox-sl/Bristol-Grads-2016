@@ -39,6 +39,16 @@
         $scope.removeSpeaker = removeSpeaker;
         $scope.switch = false;
         $scope.hasChanged = false;
+        $scope.isMobile = false; //initiate as false
+
+        getDevice();
+
+        function getDevice() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $scope.isMobile = true;
+                console.log($scope.isMobile);
+            }
+        }
 
         $scope.displayBlockedTweet = adminDashDataService.displayBlockedTweet;
 
