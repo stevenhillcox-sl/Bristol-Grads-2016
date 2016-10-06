@@ -31,7 +31,6 @@
                 scope.getSize = function(text) {
                     var size;
                     var charCount = text.toString().split("").length;
-                    console.log(charCount);
                     if (charCount < 85) {
                         size = "x-large";
                     } else if (charCount < 120) {
@@ -39,7 +38,6 @@
                     } else {
                         size = "medium";
                     }
-                    console.log(size);
                     return {
                         "font-size": size
                     };
