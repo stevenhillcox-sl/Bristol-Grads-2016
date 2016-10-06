@@ -204,6 +204,7 @@
             $scope.allVisitorsTweets = $scope.allVisitorsTweets.sort(compare);
             $scope.allVisitorsTweets.forEach(function(tweet) {
                 var tweetCount = tweet.entities.media !== undefined ? 2 : 1;
+                tweetCount = ((tweet.deleted || tweet.blocked) && !tweet.display) ? 0 : tweetCount;
                 if (!(tweet.deleted || tweet.blocked) || tweet.display || $scope.switch) {
                     if (tweetCount + countVisitors < 6) {
                         $scope.visitorsTweets.push(tweet);
@@ -226,6 +227,7 @@
             array = array.sort(compare);
             array.forEach(function(tweet) {
                 tweetCount = tweet.entities.media !== undefined ? 2 : 1;
+                tweetCount = ((tweet.deleted || tweet.blocked) && !tweet.display) ? 0 : tweetCount;
                 if (tweetCount + count < maxCount) {
                     if (!(tweet.deleted || tweet.blocked) || tweet.display || $scope.switch) {
                         newArray.push(tweet);
