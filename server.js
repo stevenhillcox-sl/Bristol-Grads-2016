@@ -16,10 +16,10 @@ var twitterClient = new Twitter({
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
-var tweetSearcher = require("./server/tweetSearch")(twitterClient, fs, "./server/speakerList.json");
+var tweetSearcher = require("./server/tweetSearch")(twitterClient, fs, "./server/config/eventConfig.json");
 
 var oauth2Client = new google.auth.OAuth2(oauthClientId, oauthSecret, REDIRECT_URL);
-var googleAuthoriser = oAuthGoogle(oauth2Client, verifier, fs);
+var googleAuthoriser = oAuthGoogle(oauth2Client, verifier, fs, "./server/config/adminConfig.json");
 
 server(port, tweetSearcher, googleAuthoriser);
 

@@ -8,42 +8,6 @@ describe("adminDashDataService", function() {
         uri: testUri
     };
 
-    var testTweets = [{
-        text: "Test tweet 1",
-        entities: {
-            hashtags: [{
-                text: "hello"
-            }],
-            user_mentions: [{
-                screen_name: "bristech"
-            }],
-            urls: []
-        },
-        user: {
-            name: "Test user 1",
-            screen_name: "user1"
-        }
-    }, {
-        text: "Test tweet 2",
-        entities: {
-            hashtags: [],
-            user_mentions: [],
-            urls: [{
-                url: "www.google.com",
-                display_url: "google.com"
-            }]
-        },
-        user: {
-            name: "Test user 2",
-            screen_name: "user2"
-        }
-    }];
-
-    var testTweetData = {
-        tweets: testTweets,
-        updates: [],
-    };
-
     var testId = 1;
 
     beforeEach(function() {
@@ -72,9 +36,6 @@ describe("adminDashDataService", function() {
         $httpMock
             .when("POST", "/admin/tweets/pin")
             .respond(200, "");
-        $httpMock
-            .when("GET", "/api/tweets")
-            .respond(testTweetData);
         $httpMock
             .when("GET", "/admin/blocked")
             .respond([]);
@@ -156,33 +117,6 @@ describe("adminDashDataService", function() {
                 var failed = jasmine.createSpy("failed");
                 $httpMock.expectGET("/api/oauth/uri").respond(500, "");
                 adminDashDataService.getAuthUri().catch(failed).then(function(result) {
-                    expect(failed.calls.any()).toEqual(true);
-                    expect(failed.calls.argsFor(0)[0].status).toEqual(500);
-                    done();
-                });
-                $httpMock.flush();
-            }
-        );
-    });
-
-    describe("getTweets", function() {
-        it("returns a promise which resolves with a list of the tweet objects sent by the server when getTweets is called",
-            function(done) {
-                var failed = jasmine.createSpy("failed");
-                adminDashDataService.getTweets().catch(failed).then(function(result) {
-                    expect(failed.calls.any()).toEqual(false);
-                    expect(result).toEqual(testTweetData);
-                    done();
-                });
-                $httpMock.flush();
-            }
-        );
-
-        it("returns a promise which rejects when getTweets is called and the server returns an error code",
-            function(done) {
-                var failed = jasmine.createSpy("failed");
-                $httpMock.expectGET("/api/tweets").respond(500, "");
-                adminDashDataService.getTweets().catch(failed).then(function(result) {
                     expect(failed.calls.any()).toEqual(true);
                     expect(failed.calls.argsFor(0)[0].status).toEqual(500);
                     done();

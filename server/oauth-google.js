@@ -1,4 +1,4 @@
-module.exports = function(oauth2Client, verifier, fs) {
+module.exports = function(oauth2Client, verifier, fs, configFile) {
 
     var oAuthUri = oauth2Client.generateAuthUrl({
         scope: "profile",
@@ -35,7 +35,7 @@ module.exports = function(oauth2Client, verifier, fs) {
 
     function getAdminIDs() {
         return new Promise(function(resolve, reject) {
-            fs.readFile("./server/adminConfig.json", "utf8", function(err, data) {
+            fs.readFile(configFile, "utf8", function(err, data) {
                 if (err) {
                     reject(err);
                 } else {

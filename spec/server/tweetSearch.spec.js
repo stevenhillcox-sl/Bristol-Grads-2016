@@ -8,12 +8,24 @@ var client;
 var getTweets;
 var fs;
 
+var speakers = ["alice", "bob", "charlie"];
+var hashtags = ["#bobtech", "#bobtech2016"];
+var mentions = ["@bob"];
+var officialUsers = ["bob"];
+
+var eventConfig = {
+    hashtags: hashtags,
+    mentions: mentions,
+    officialUsers: officialUsers,
+    speakers: speakers
+};
+
 var testTimeline = [{
     id: 1,
     id_str: "1",
     text: "Test tweet 1",
     user: {
-        screen_name: "bristech",
+        screen_name: officialUsers[0],
     },
     entities: {
         hashtags: [],
@@ -24,7 +36,7 @@ var testTimeline = [{
     id_str: "2",
     text: "Test tweet 2",
     user: {
-        screen_name: "bristech",
+        screen_name: officialUsers[0],
     },
     entities: {
         hashtags: [],
@@ -37,7 +49,7 @@ var testTimeline2 = [{
     id_str: "4",
     text: "Test tweet 3",
     user: {
-        screen_name: "bristech",
+        screen_name: officialUsers[0],
     },
     entities: {
         hashtags: [],
@@ -48,7 +60,7 @@ var testTimeline2 = [{
     id_str: "7",
     text: "Test tweet 4",
     user: {
-        screen_name: "bristech",
+        screen_name: officialUsers[0],
     },
     entities: {
         hashtags: [],
@@ -60,40 +72,40 @@ var testTweets = {
     statuses: [{
         id: 1,
         id_str: "1",
-        text: "Test tweet 1 #bristech",
+        text: "Test tweet 1 " + hashtags[0],
         user: {
             screen_name: "randomjoe",
         },
         entities: {
             hashtags: [{
-                text: "bristech",
+                text: hashtags[0].slice(1),
             }],
             user_mentions: [],
         },
     }, {
         id: 2,
         id_str: "2",
-        text: "Test tweet 2 #bristech",
+        text: "Test tweet 2 " + hashtags[0],
         user: {
             screen_name: "randomjoe",
         },
         entities: {
             hashtags: [{
-                text: "bristech",
+                text: hashtags[0].slice(1),
             }],
             user_mentions: [],
         },
     }, {
         id: 5,
         id_str: "5",
-        text: "Test tweet 3 @bristech",
+        text: "Test tweet 3 " + mentions[0],
         user: {
             screen_name: "randomjoe",
         },
         entities: {
             hashtags: [],
             user_mentions: [{
-                screen_name: "bristech",
+                screen_name: mentions[0].slice(1),
             }],
         },
     }],
@@ -103,13 +115,13 @@ var testTweetsMixed = {
     statuses: testTweets.statuses.concat({
         id: 10,
         id_str: "10",
-        text: "Test official tweet #bristech",
+        text: "Test official tweet " + hashtags[0],
         user: {
-            screen_name: "bristech",
+            screen_name: officialUsers[0],
         },
         entities: {
             hashtags: [{
-                text: "bristech",
+                text: hashtags[0].slice(1),
             }],
             user_mentions: [],
         },
@@ -147,11 +159,6 @@ var testInitialResourceProfiles = {
     },
 };
 
-var speakers = ["alice", "bob", "charlie"];
-var speakerList = {
-    speakers: speakers
-};
-
 var testUser = {
     screen_name: "name",
     name: "Billy Name"
@@ -182,16 +189,16 @@ describe("tweetSearch", function() {
             get: jasmine.createSpy("get"),
         };
 
-        fs = {
-            readFile: function(file, encoding, callback) {},
-            writeFile: function(file, data, callback) {}
-        };
+        fs = jasmine.createSpyObj("fs", [
+            "readFile",
+            "writeFile",
+        ]);
 
-        spyOn(fs, "readFile").and.callFake(function(file, encoding, callback) {
-            callback(undefined, JSON.stringify(speakerList));
+        fs.readFile.and.callFake(function(file, encoding, callback) {
+            callback(undefined, JSON.stringify(eventConfig));
         });
 
-        spyOn(fs, "writeFile").and.callFake(function(file, data, callback) {
+        fs.writeFile.and.callFake(function(file, data, callback) {
             callback(undefined);
         });
 
@@ -257,7 +264,7 @@ describe("tweetSearch", function() {
             var queries = getQueries("search/tweets");
             expect(queries.length).toEqual(1);
             expect(queries[0]).toEqual({
-                q: "#bristech OR #bristech2016 OR @bristech"
+                q: hashtags.concat(mentions).join(" OR ")
             });
         });
 
@@ -275,7 +282,7 @@ describe("tweetSearch", function() {
             var queries = getQueries("statuses/user_timeline");
             expect(queries.length).toEqual(1);
             expect(queries[0]).toEqual({
-                screen_name: "bristech"
+                screen_name: officialUsers[0]
             });
         });
 
@@ -289,7 +296,14 @@ describe("tweetSearch", function() {
         beforeEach(function() {
             testTweetData = {
                 tweets: testTimeline.concat(testTimeline2),
-                updates: [],
+                updates: speakers.map(function(speaker) {
+                    return {
+                        type: "speaker_update",
+                        since: new Date(),
+                        screen_name: speaker,
+                        operation: "add"
+                    };
+                }),
             };
             tweetSearcher.loadTweets(testTimeline, "test");
             testTweetData.updates.push({
@@ -316,7 +330,7 @@ describe("tweetSearch", function() {
         it("returns only updates that occurred after the time given by the `since` argument", function() {
             var beforeSecondUpdate = tweetSearcher.getTweetData(new Date(secondUpdateTime.getTime() - 1));
             expect(beforeSecondUpdate.tweets).toEqual(testTimeline2);
-            expect(beforeSecondUpdate.updates).toEqual([testTweetData.updates[1]]);
+            expect(beforeSecondUpdate.updates).toEqual([testTweetData.updates[testTweetData.updates.length - 1]]);
             var atSecondUpdate = tweetSearcher.getTweetData(secondUpdateTime);
             expect(atSecondUpdate.tweets).toEqual([]);
             expect(atSecondUpdate.updates).toEqual([]);
@@ -448,7 +462,6 @@ describe("tweetSearch", function() {
     });
 
     describe("speakers ", function() {
-
         it("getSpeakers returns speakers read in from file", function() {
             expect(tweetSearcher.getSpeakers()).toEqual(speakers);
         });
@@ -457,6 +470,9 @@ describe("tweetSearch", function() {
             tweetSearcher.addSpeaker("dan");
             speakers.push("dan");
             var objToWrite = {
+                "hashtags": hashtags,
+                "mentions": mentions,
+                "officialUsers": officialUsers,
                 "speakers": speakers
             };
             expect(fs.writeFile).toHaveBeenCalledWith("file", JSON.stringify(objToWrite), jasmine.any(Function));
@@ -467,6 +483,9 @@ describe("tweetSearch", function() {
             tweetSearcher.removeSpeaker("dan");
             speakers.splice(speakers.indexOf("dan"), 1);
             expect(fs.writeFile).toHaveBeenCalledWith("file", JSON.stringify({
+                "hashtags": hashtags,
+                "mentions": mentions,
+                "officialUsers": officialUsers,
                 "speakers": speakers
             }), jasmine.any(Function));
         });

@@ -18,6 +18,7 @@
                 addBlockedUser: "&",
                 setPinnedStatus: "&",
                 displayBlockedTweet: "&",
+                toggleBlocked: "&",
             },
             templateUrl: function(element, attrs) {
                 var admin = "templates/tweet-column-" + attrs.position + "-admin.html";

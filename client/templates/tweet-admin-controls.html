@@ -16,7 +16,7 @@
     </md-icon>
 </md-button>
 
-<md-button class="md-icon-button" ng-click="addBlockedUser({name: tweet.user.name, screen_name: tweet.user.screen_name})"  ng-attr-title="{{tweet.blocked ? 'Unblock this user' : 'Block this user'}}">
+<md-button class="md-icon-button" ng-click="toggleBlocked({name: tweet.user.name, screen_name: tweet.user.screen_name, blocked: tweet.blocked})"  ng-attr-title="{{tweet.blocked ? 'Unblock this user' : 'Block this user'}}">
     <md-icon ng-class="{'blocked-button-selected' : tweet.blocked}">
         <i class="material-icons">do_not_disturb</i>
     </md-icon>

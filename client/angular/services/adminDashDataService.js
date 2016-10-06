@@ -10,13 +10,12 @@
             authenticate: authenticate,
             logOut: logOut,
             getAuthUri: getAuthUri,
-            getTweets: getTweets,
             setDeletedStatus: setDeletedStatus,
             blockedUsers: blockedUsers,
             addBlockedUser: addBlockedUser,
             removeBlockedUser: removeBlockedUser,
-            addSpeaker: addSpeaker,
             getSpeakers: getSpeakers,
+            addSpeaker: addSpeaker,
             removeSpeaker: removeSpeaker,
             setPinnedStatus: setPinnedStatus,
             displayBlockedTweet: displayBlockedTweet
@@ -72,18 +71,6 @@
         function getAuthUri() {
             return $http.get("/api/oauth/uri").then(function(result) {
                 return result.data.uri;
-            });
-        }
-
-        function getTweets(since) {
-            var query = {};
-            if (since) {
-                query.since = since;
-            }
-            return $http.get("/api/tweets", {
-                params: query
-            }).then(function(result) {
-                return result.data;
             });
         }
 

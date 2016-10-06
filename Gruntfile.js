@@ -9,6 +9,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-webpack");
 
     var webpack = require("webpack");
+    var child_process = require("child_process");
 
     var files = [
         "Gruntfile.js",
@@ -175,19 +176,14 @@ module.exports = function(grunt) {
     grunt.registerTask("startServer", "Task that starts a server attached to the Grunt process.", function() {
         var cmd = process.execPath;
         process.env.DEV_MODE = true;
-        serveProc = grunt.util.spawn({
-            cmd: cmd,
-            args: ["server.js"]
-        }, function(err) {
-            return err;
+        serveProc = child_process.spawn(cmd, ["server.js"], {
+            detached: true,
+            stdio: "inherit",
         });
-        serveProc.stdout.pipe(process.stdout);
-        serveProc.stderr.pipe(process.stderr);
     });
     grunt.registerTask("killServer", "Task that stops the server if it is running.", function() {
         if (serveProc) {
             serveProc.kill();
-
         }
     });
 

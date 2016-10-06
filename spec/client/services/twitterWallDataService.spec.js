@@ -34,8 +34,6 @@ describe("twitterWallDataService", function() {
         }
     }];
 
-    var testSpeakers = ["Alice", "Bob", "Charlie"];
-
     beforeEach(function() {
         angular.module("ngMaterial", []);
         angular.module("angularMoment", []);
@@ -50,9 +48,6 @@ describe("twitterWallDataService", function() {
         $httpMock
             .when("GET", "/api/tweets")
             .respond(testTweets);
-        $httpMock
-            .when("GET", "/api/speakers")
-            .respond(testSpeakers);
     }));
 
     describe("getTweets", function() {
@@ -74,34 +69,6 @@ describe("twitterWallDataService", function() {
                 var failed = jasmine.createSpy("failed");
                 $httpMock.expectGET("/api/tweets").respond(500, "");
                 twitterWallDataService.getTweets().catch(failed).then(function(result) {
-                    expect(failed.calls.any()).toEqual(true);
-                    expect(failed.calls.argsFor(0)[0].status).toEqual(500);
-                    done();
-                });
-                $httpMock.flush();
-            }
-        );
-    });
-
-    describe("getSpeakers", function() {
-        it("returns a promise which resolves with the speaker array sent by the server when getSpeakers is called",
-            function(done) {
-                var failed = jasmine.createSpy("failed");
-                $httpMock.expectGET("/api/speakers");
-                twitterWallDataService.getSpeakers().catch(failed).then(function(result) {
-                    expect(failed.calls.any()).toEqual(false);
-                    expect(result).toEqual(testSpeakers);
-                    done();
-                });
-                $httpMock.flush();
-            }
-        );
-
-        it("returns a promise which rejects when getSpeakers is called and the server returns an error code",
-            function(done) {
-                var failed = jasmine.createSpy("failed");
-                $httpMock.expectGET("/api/speakers").respond(500, "");
-                twitterWallDataService.getSpeakers().catch(failed).then(function(result) {
                     expect(failed.calls.any()).toEqual(true);
                     expect(failed.calls.argsFor(0)[0].status).toEqual(500);
                     done();

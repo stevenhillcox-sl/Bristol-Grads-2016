@@ -28,26 +28,18 @@
         $scope.extraSpeakersTweets = [];
 
         $scope.speakers = [];
+        vm.updates = [];
 
         activate();
 
         function activate() {
-            pageUpdate();
-            $interval(pageUpdate, 500);
-        }
-
-        function pageUpdate() {
             updateTweets();
-            twitterWallDataService.getSpeakers().then(function(speakers) {
-                $scope.speakers = speakers;
-            }).catch(function(err) {
-                console.log("Could not get list of speakers:" + err);
-            });
+            $interval(updateTweets, 500);
         }
 
         function updateTweets() {
             twitterWallDataService.getTweets(vm.latestUpdateTime).then(function(results) {
-                if (results.updates.length > 0) {
+                if (results.updates.length > 0 || $scope.hasChanged) {
                     if (results.tweets.length > 0) {
                         results.tweets.forEach(function(tweet) {
                             $sce.trustAsHtml(tweetTextManipulationService.updateTweet(tweet));
@@ -59,93 +51,58 @@
                             }
                         });
                     }
-                    vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
-                    setFlagsForTweets(results.updates);
+                    if (results.updates.length > 0) {
+                        vm.updates = vm.updates.concat(results.updates);
+                        vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
+                    }
+                    setFlagsForTweets(vm.updates);
                 }
             });
         }
 
-        function setPinned(update, prop) {
-
+        function setStatusForArray(array, update, prop, found) {
             var i;
-            var tweet;
-            var found = false;
-            if (update.status[prop] === true) {
-                for (i = 0; i < $scope.allVisitorsTweets.length && found === false; i++) {
-                    tweet = $scope.allVisitorsTweets[i];
-                    if (tweet.id_str === update.id) {
-                        tweet[prop] = update.status[prop];
-                        $scope.allPinnedTweets.push(tweet);
-                        $scope.allVisitorsTweets.splice(i, 1);
-                        i--;
+            for (i = 0; i < array.length && found === false; i++) {
+                var tweet = array[i];
+                if (tweet.id_str === update.id) {
+                    tweet[prop] = update.status[prop];
+                    if (prop === "pinned" && update.status[prop] === true) {
+                        addToPinned(tweet);
+                        array.splice(i, 1);
                         found = true;
-                    }
-                }
-                for (i = 0; i < $scope.allSpeakersTweets.length && found === false; i++) {
-                    tweet = $scope.allSpeakersTweets[i];
-                    if (tweet.id_str === update.id) {
-                        tweet[prop] = update.status[prop];
-                        $scope.allPinnedTweets.push(tweet);
-                        $scope.allSpeakersTweets.splice(i, 1);
-                        i--;
-                        found = true;
-                    }
-                }
-            } else {
-                for (i = 0; i < $scope.allPinnedTweets.length && found === false; i++) {
-                    tweet = $scope.allPinnedTweets[i];
-                    if (tweet.id_str === update.id) {
-                        tweet[prop] = update.status[prop];
+                    } else if (prop === "pinned" && update.status[prop] === false) {
                         if (tweet.wallPriority) {
-                            $scope.allSpeakersTweets.push(tweet);
+                            addToSpeakers(tweet);
                         } else {
-                            $scope.allVisitorsTweets.push(tweet);
+                            addToVisitors(tweet);
                         }
-                        $scope.allPinnedTweets.splice(i, 1);
-                        i--;
+                        array.splice(i, 1);
                         found = true;
                     }
                 }
             }
-        }
-
-        function setOtherStatus(update, prop) {
-            var i;
-            var tweet;
-            var found = false;
-            for (i = 0; i < $scope.allVisitorsTweets.length && found === false; i++) {
-                tweet = $scope.allVisitorsTweets[i];
-                if (tweet.id_str === update.id) {
-                    tweet[prop] = update.status[prop];
-                    found = true;
-                }
-            }
-            for (i = 0; i < $scope.allSpeakersTweets.length && found === false; i++) {
-                tweet = $scope.allSpeakersTweets[i];
-                if (tweet.id_str === update.id) {
-                    tweet[prop] = update.status[prop];
-                    found = true;
-                }
-            }
-            for (i = 0; i < $scope.allPinnedTweets.length && found === false; i++) {
-                tweet = $scope.allPinnedTweets[i];
-                if (tweet.id_str === update.id) {
-                    tweet[prop] = update.status[prop];
-                    found = true;
-                }
-            }
+            return {
+                tweets: array,
+                found: found
+            };
         }
 
         function setStatus(update) {
-
             for (var prop in update.status) {
-                console.log(prop);
-                if (prop === "pinned") {
-                    console.log("yes");
-                    setPinned(update, prop);
-                } else {
-                    setOtherStatus(update, prop);
-                }
+                var found = false;
+                var result;
+
+                result = setStatusForArray($scope.allVisitorsTweets, update, prop, found);
+                found = result.found;
+                $scope.allVisitorsTweets = result.tweets;
+
+                result = setStatusForArray($scope.allSpeakersTweets, update, prop, found);
+                found = result.found;
+                $scope.allSpeakersTweets = result.tweets;
+
+                result = setStatusForArray($scope.allPinnedTweets, update, prop, found);
+                found = result.found;
+                $scope.allPinnedTweets = result.tweets;
             }
         }
 
@@ -219,7 +176,6 @@
         }
 
         function splitTweetsIntoCategories() {
-            var tweetCount;
             var result;
             var countVisitors = 0;
             var countSpeakers = 0;
@@ -240,10 +196,15 @@
             $scope.pinnedTweets = result.tweets;
             countPinned = result.count;
 
+            cutOffVisitorsAndFillEmptySpace(countVisitors, countSpeakers, countPinned);
+
+        }
+
+        function cutOffVisitorsAndFillEmptySpace(countVisitors, countSpeakers, countPinned) {
             $scope.allVisitorsTweets = $scope.allVisitorsTweets.sort(compare);
             $scope.allVisitorsTweets.forEach(function(tweet) {
-                tweetCount = tweet.entities.media !== undefined ? 2 : 1;
-                if (!(tweet.deleted || tweet.blocked) || tweet.display) {
+                var tweetCount = tweet.entities.media !== undefined ? 2 : 1;
+                if (!(tweet.deleted || tweet.blocked) || tweet.display || $scope.switch) {
                     if (tweetCount + countVisitors < 6) {
                         $scope.visitorsTweets.push(tweet);
                         countVisitors += tweetCount;
@@ -266,7 +227,7 @@
             array.forEach(function(tweet) {
                 tweetCount = tweet.entities.media !== undefined ? 2 : 1;
                 if (tweetCount + count < maxCount) {
-                    if (!(tweet.deleted || tweet.blocked) || tweet.display) {
+                    if (!(tweet.deleted || tweet.blocked) || tweet.display || $scope.switch) {
                         newArray.push(tweet);
                         count += tweetCount;
                     }
