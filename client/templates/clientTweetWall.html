@@ -1,4 +1,4 @@
-<div ng-class="{'container-admin': admin, 'container': !admin}">
+<div ng-class="{'container-admin': loggedIn, container: !loggedIn}">
     <tweet-column
         position="left"
         tweets="tweets"
@@ -14,7 +14,7 @@
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        class="column-container"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
     ></tweet-column>
     <tweet-column
         position="middle"
@@ -31,7 +31,7 @@
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        class="column-container"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
     ></tweet-column>
     <tweet-column
         position="right"
@@ -48,6 +48,6 @@
         add-blocked-user="addBlockedUser(name, screen_name)"
         set-pinned-status="setPinnedStatus(id, status)"
         display-blocked-tweet="displayBlockedTweet(id)"
-        class="column-container"
+        ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn}"
     ></tweet-column>
 </div>

@@ -23,7 +23,7 @@ html, body, .view {
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-start;
-	background-color: red;
+	background-color: rgb(104, 183, 252);
 	overflow-y: auto;
 	width: 100%;
 }
