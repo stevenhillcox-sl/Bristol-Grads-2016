@@ -3,3 +3,4 @@ node_modules/
 bundle/
 _SpecRunner.html
 server/config/
+server/temp/

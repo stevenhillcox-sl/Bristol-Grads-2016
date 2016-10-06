@@ -159,9 +159,16 @@ var testInitialResourceProfiles = {
     },
 };
 
+var testRateLimitFile = "./server/temp/rateLimitRemaining.json";
+
 var testUser = {
     screen_name: "name",
     name: "Billy Name"
+};
+
+var testRateLimitSafetyData = {
+    remaining: 180,
+    resetTime: new Date(),
 };
 
 describe("tweetSearch", function() {
@@ -195,7 +202,11 @@ describe("tweetSearch", function() {
         ]);
 
         fs.readFile.and.callFake(function(file, encoding, callback) {
-            callback(undefined, JSON.stringify(eventConfig));
+            if (file === "file") {
+                callback(undefined, JSON.stringify(eventConfig));
+            } else {
+                callback(undefined, JSON.stringify(testRateLimitSafetyData));
+            }
         });
 
         fs.writeFile.and.callFake(function(file, data, callback) {
@@ -258,6 +269,117 @@ describe("tweetSearch", function() {
             }
         );
     }
+
+    describe("rateLimitSafety", function() {
+        describe("rateCheckLoop", function() {
+            it("attempts to read from the rate limit safety file", function() {
+                expect(fs.readFile.calls.argsFor(1)[0]).toEqual(testRateLimitFile);
+            });
+
+            it("attempts to get the twitter rate limits if file does not exist", function() {
+                setupServerWithRateLimit({}, {
+                    code: "ENOENT"
+                });
+                expect(getQueries("application/rate_limit_status").length).toEqual(1);
+            });
+
+            it("does not attempt to get the twitter rate limits if other error on read file", function() {
+                setupServerWithRateLimit({}, {
+                    code: "ANYERROR"
+                });
+                expect(getQueries("application/rate_limit_status").length).toEqual(0);
+            });
+
+            it("attempts to get the twitter rate limits if file exists and rate limit queries remain", function() {
+                setupServerWithRateLimit({
+                    remaining: 180,
+                    resetTime: new Date(new Date().getTime() + 1),
+                });
+                expect(getQueries("application/rate_limit_status").length).toEqual(1);
+            });
+
+            it("attempts to get the twitter rate limits if file exists and reset time has been exceeded", function() {
+                setupServerWithRateLimit({
+                    remaining: 0,
+                    resetTime: new Date(new Date().getTime() - 1),
+                });
+                expect(getQueries("application/rate_limit_status").length).toEqual(1);
+            });
+
+            it("does not attempt to get the twitter rate limits if file exists but no rate limit queries remain and " +
+                "reset time has been exceeded",
+                function() {
+                    setupServerWithRateLimit({
+                        remaining: 0,
+                        resetTime: new Date(new Date().getTime() + 1),
+                    });
+                    expect(getQueries("application/rate_limit_status").length).toEqual(0);
+                });
+
+            it("attempts to check the rate limit safety file again in 5 seconds if the check fails", function() {
+                setupServerWithRateLimit({
+                    remaining: 0,
+                    resetTime: new Date(new Date().getTime() + 5000),
+                });
+                expect(fs.readFile).toHaveBeenCalledTimes(2);
+                jasmine.clock().tick(5000);
+                expect(fs.readFile).toHaveBeenCalledTimes(3);
+                jasmine.clock().tick(5000);
+                expect(fs.readFile).toHaveBeenCalledTimes(4);
+                jasmine.clock().tick(5000);
+                expect(fs.readFile).toHaveBeenCalledTimes(4);
+            });
+
+            function setupServerWithRateLimit(rateLimitData, error) {
+                fs.readFile.and.callFake(function(file, encoding, callback) {
+                    if (file === "file") {
+                        callback(undefined, JSON.stringify(eventConfig));
+                    } else {
+                        callback(error, JSON.stringify(rateLimitData));
+                    }
+                });
+                fs.readFile.calls.reset();
+                client.get.calls.reset();
+                tweetSearcher = tweetSearch(client, fs, "file");
+            }
+        });
+
+        describe("rateSaveLoop", function() {
+            it("attempts to save the received rate limit headers to the rate limit file", function() {
+                expect(fs.writeFile).toHaveBeenCalledTimes(1);
+                expect(fs.writeFile).toHaveBeenCalledWith(testRateLimitFile, JSON.stringify({
+                    remaining: testResponseOk.headers["x-rate-limit-remaining"],
+                    resetTime: testResponseOk.headers["x-rate-limit-reset"] + 1000,
+                }), jasmine.any(Function));
+            });
+
+            it("attempts to save the rate limit safety file again in 5 seconds if the save fails", function() {
+                setupServerWithRateResponse({
+                    code: "ERROR"
+                });
+                expect(fs.writeFile).toHaveBeenCalledTimes(1);
+                jasmine.clock().tick(5000);
+                expect(fs.writeFile).toHaveBeenCalledTimes(2);
+                jasmine.clock().tick(5000);
+                expect(fs.writeFile).toHaveBeenCalledTimes(3);
+                fs.writeFile.and.callFake(function(file, data, callback) {
+                    callback(null);
+                });
+                jasmine.clock().tick(5000);
+                expect(fs.writeFile).toHaveBeenCalledTimes(4);
+            });
+
+            function setupServerWithRateResponse(error) {
+                fs.writeFile.and.callFake(function(file, data, callback) {
+                    callback(error);
+                });
+                fs.writeFile.calls.reset();
+                client.get.calls.reset();
+                tweetSearcher = tweetSearch(client, fs, "file");
+                getLatestCallback("application/rate_limit_status")(null, testInitialResourceProfiles, testResponseOk);
+            }
+        });
+    });
 
     describe("getTweetsWithHashtag", function() {
         it("searches only for tweets with any of the specified hashtags on the first query", function() {

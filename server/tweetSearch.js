@@ -8,6 +8,8 @@ module.exports = function(client, fs, eventConfigFile) {
     var speakers = [];
     var officialUsers = [];
 
+    var rateLimitFile = "./server/temp/rateLimitRemaining.json";
+
     function tweetType(tweet) {
         if (officialUsers.indexOf(tweet.user.screen_name) !== -1) {
             return "official";
@@ -132,10 +134,41 @@ module.exports = function(client, fs, eventConfigFile) {
         var timelineUpdateFn = tweetResourceGetter("statuses/user_timeline", {
             screen_name: officialUsers[0]
         });
-        getApplicationRateLimits(function() {
+        // Begins the chain of callbacks defined below
+        rateCheckLoop();
+        // Callback that loops every 5 seconds until the server has confirmed the ability to safely access the rate
+        // limits API; calls `rateSaveLoop` on success
+        function rateCheckLoop() {
+            checkRateLimitSafety(function(success) {
+                if (success) {
+                    getApplicationRateLimits(rateSaveLoop);
+                } else {
+                    var loopDelay = 5000;
+                    console.log("Could not verify rate limit safety, retrying after " + loopDelay + "ms...");
+                    setTimeout(rateCheckLoop, loopDelay);
+                }
+            });
+        }
+
+        // Callback that receives the rate limit data from `getApplicationRateLimits` and loops every 5 seconds until
+        // the server has saved the rate limit data successfully; calls `beginResourceUpdates` on success
+        function rateSaveLoop(rateLimitData) {
+            fs.writeFile(rateLimitFile, JSON.stringify(rateLimitData), function(err) {
+                if (!err) {
+                    beginResourceUpdates();
+                } else {
+                    var loopDelay = 5000;
+                    console.log("Could not save rate limit data, retrying after " + loopDelay + "ms...");
+                    setTimeout(rateSaveLoop.bind(undefined, rateLimitData), loopDelay);
+                }
+            });
+        }
+
+        // Begins the loop of collecting tweets from the Twitter API
+        function beginResourceUpdates() {
             resourceUpdate("search/tweets", hashtagUpdateFn, searchUpdater);
             resourceUpdate("statuses/user_timeline", timelineUpdateFn, userUpdater);
-        });
+        }
     });
 
     return {
@@ -151,6 +184,27 @@ module.exports = function(client, fs, eventConfigFile) {
         removeSpeaker: removeSpeaker,
         displayBlockedTweet: displayBlockedTweet
     };
+
+    function checkRateLimitSafety(callback) {
+        fs.readFile(rateLimitFile, "utf8", function(err, data) {
+            var success = false;
+            if (err) {
+                if (err.code === "ENOENT") {
+                    success = true;
+                } else {
+                    console.log("Error reading rate limit safety file: " + err);
+                }
+            } else {
+                try {
+                    var rateLimitInfo = JSON.parse(data);
+                    success = (rateLimitInfo.remaining > 1 || new Date() > new Date(rateLimitInfo.resetTime));
+                } catch (err) {
+                    console.log("Error parsing rate limit safety file: " + err);
+                }
+            }
+            callback(success);
+        });
+    }
 
     function getBlockedUsers() {
         return blockedUsers;
@@ -275,6 +329,10 @@ module.exports = function(client, fs, eventConfigFile) {
             resources: resourcePaths.join(","),
         };
         client.get("application/rate_limit_status", query, function(error, data, response) {
+            var rateLimitData = {
+                remaining: response.headers["x-rate-limit-remaining"],
+                resetTime: (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000,
+            };
             if (data) {
                 resourceNames.forEach(function(name, idx) {
                     var resourceProfile = data.resources[resourcePaths[idx]]["/" + name];
@@ -282,9 +340,9 @@ module.exports = function(client, fs, eventConfigFile) {
                     apiResources[name].resetTime = (resourceProfile.reset + 1) * 1000;
                 });
             } else {
-                console.log(error);
+                throw new Error("Failed to get safe twitter rate limits.");
             }
-            callback();
+            callback(rateLimitData);
         });
     }
 

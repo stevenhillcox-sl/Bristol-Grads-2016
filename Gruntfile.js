@@ -163,21 +163,20 @@ module.exports = function(grunt) {
 
     grunt.event.on("watch", function(action, filepath, target) {
         var fixTarget = [];
-        if (filepath.slice(filepath.length - 3) === ".js") {
+        if (filepath.slice(-3) === ".js") {
             fixTarget = filepath;
         }
-        grunt.config("jshint.all", filepath);
-        grunt.config("jscs.fix.files.src", filepath);
-        grunt.config("jscs.verify.files.src", filepath);
-        grunt.config("jsbeautifier.beautify.src", filepath);
-        grunt.config("jsbeautifier.verify.src", filepath);
+        grunt.config("jshint.all", fixTarget);
+        grunt.config("jscs.fix.files.src", fixTarget);
+        grunt.config("jscs.verify.files.src", fixTarget);
+        grunt.config("jsbeautifier.beautify.src", fixTarget);
+        grunt.config("jsbeautifier.verify.src", fixTarget);
     });
 
     grunt.registerTask("startServer", "Task that starts a server attached to the Grunt process.", function() {
         var cmd = process.execPath;
         process.env.DEV_MODE = true;
         serveProc = child_process.spawn(cmd, ["server.js"], {
-            detached: true,
             stdio: "inherit",
         });
     });
