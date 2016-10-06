@@ -311,6 +311,11 @@
             var countVisitors = 0;
             var countSpeakers = 0;
             var countPinned = 0;
+
+            $scope.visitorsTweets = [];
+            $scope.speakersTweets = [];
+            $scope.pinnedTweets = [];
+
             $scope.extraPinnedTweets = [];
             $scope.extraSpeakersTweets = [];
 
