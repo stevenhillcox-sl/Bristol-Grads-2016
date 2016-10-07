@@ -24,7 +24,6 @@ html, body, .view {
 	justify-content: center;
 	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
-	overflow-y: auto;
 	width: 100%;
 }
 
