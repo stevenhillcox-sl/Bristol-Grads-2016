@@ -1,6 +1,5 @@
 <div ng-class="{'container-admin': loggedIn, container: !loggedIn, 'container-admin-mobile': isMobile}">
     <md-button ng-if="loggedIn&&isMobile" style="width: 95%" ng-click="changeTab(1)"><h2>PINNED</h2></md-button>
-    <div ng-hide="tab!==1&&isMobile">
         <tweet-column
             position="left"
             tweets="tweets"
@@ -10,6 +9,7 @@
             extra-pinned-tweets="extraPinnedTweets"
             extra-speakers-tweets="extraSpeakersTweets"
             admin="loggedIn"
+            ng-hide="tab!==1&&isMobile"
             get-size="getSize"
             switch="switch"
             is-mobile="isMobile"
@@ -20,12 +20,11 @@
             ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
             toggle-blocked="toggleBlocked(name, screen_name, blocked)"
         ></tweet-column>
-    </div>
     <md-button ng-if="loggedIn&&isMobile" style="width: 95%" ng-click="changeTab(2)"><h2>VISITORS</h2></md-button>
-    <div ng-hide="tab!==2&&isMobile">
         <tweet-column
             position="middle"
             tweets="tweets"
+            ng-hide="tab!==2&&isMobile"
             visitors-tweets="visitorsTweets"
             speakers-weets="speakersTweets"
             pinned-tweets="pinnedTweets"
@@ -42,13 +41,12 @@
             ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
             toggle-blocked="toggleBlocked(name, screen_name, blocked)"
         ></tweet-column>
-    </div>
     <md-button ng-if="loggedIn&&isMobile" style="width: 95%" ng-click="changeTab(3)"><h2>SPEAKERS</h2></md-button>
-    <div ng-hide="tab!==3&&isMobile">
         <tweet-column
             position="right"
             tweets="tweets"
             switch="switch"
+            ng-hide="tab!==3&&isMobile"
             is-mobile="isMobile"
             visitors-tweets="visitorsTweets"
             speakers-tweets="speakersTweets"
@@ -64,5 +62,4 @@
             ng-class="{'column-container': !loggedIn, 'column-container-admin': loggedIn, 'mobile': isMobile}"
             toggle-blocked="toggleBlocked(name, screen_name, blocked)"
         ></tweet-column>
-    </div>
 </div>
