@@ -27,6 +27,10 @@
 	transition: .5s;
 }
 
+.retweet-hidden {
+	opacity: 0.5;
+}
+
 .tweet-container {
 	margin: 0px; 
 	height: 100%;

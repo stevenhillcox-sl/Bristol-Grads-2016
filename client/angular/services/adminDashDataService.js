@@ -18,7 +18,8 @@
             addSpeaker: addSpeaker,
             removeSpeaker: removeSpeaker,
             setPinnedStatus: setPinnedStatus,
-            displayBlockedTweet: displayBlockedTweet
+            displayBlockedTweet: displayBlockedTweet,
+            setRetweetDisplayStatus: setRetweetDisplayStatus
         };
 
         function displayBlockedTweet(id) {
@@ -115,6 +116,12 @@
             return $http.post("/admin/tweets/pin", {
                 id: id,
                 pinned: pinned
+            });
+        }
+
+        function setRetweetDisplayStatus(status) {
+            return $http.post("/admin/tweets/retweetDisplayStatus", {
+                status: status
             });
         }
     }

@@ -42,6 +42,9 @@ describe("adminDashDataService", function() {
         $httpMock
             .when("GET", "/api/speakers")
             .respond([]);
+        $httpMock
+            .when("POST", "/admin/tweets/retweetDisplayStats")
+            .respond(200, "");
     }));
 
     describe("authenticate", function() {
@@ -306,6 +309,37 @@ describe("adminDashDataService", function() {
                 var failed = jasmine.createSpy("failed");
                 $httpMock.expectPOST("/admin/tweets/pin").respond(500, "");
                 adminDashDataService.setPinnedStatus(testId, true).catch(failed).then(function(result) {
+                    expect(failed.calls.any()).toEqual(true);
+                    expect(failed.calls.argsFor(0)[0].status).toEqual(500);
+                    done();
+                });
+                $httpMock.flush();
+            }
+        );
+    });
+
+    describe("setRetweetDisplayStatus", function() {
+        it("sends a post request to the /admin/tweets/retweetDisplayStatus endpoint with the id and status requested",
+            function(done) {
+                $httpMock.expectPOST("/admin/tweets/retweetDisplayStatus").respond(function(method, url, data, headers, params) {
+                    expect(JSON.parse(data)).toEqual({
+                        status: "all",
+                    });
+                    return [200, ""];
+                });
+                adminDashDataService.setRetweetDisplayStatus("all").finally(function() {
+                    done();
+                });
+                $httpMock.flush();
+            }
+        );
+
+        it("returns a promise which rejects when pin is called and the server rejects",
+
+            function(done) {
+                var failed = jasmine.createSpy("failed");
+                $httpMock.expectPOST("/admin/tweets/retweetDisplayStatus").respond(500, "");
+                adminDashDataService.setRetweetDisplayStatus("all").catch(failed).then(function(result) {
                     expect(failed.calls.any()).toEqual(true);
                     expect(failed.calls.argsFor(0)[0].status).toEqual(500);
                     done();

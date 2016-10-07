@@ -35,6 +35,7 @@
 
         $scope.setDeletedStatus = adminDashDataService.setDeletedStatus;
         $scope.setPinnedStatus = adminDashDataService.setPinnedStatus;
+
         $scope.addSpeaker = addSpeaker;
         $scope.removeSpeaker = removeSpeaker;
         $scope.switch = false;
@@ -55,6 +56,8 @@
         }
 
         $scope.displayBlockedTweet = adminDashDataService.displayBlockedTweet;
+
+        $scope.setRetweetDisplayStatus = adminDashDataService.setRetweetDisplayStatus;
 
         $scope.getBlockedUsers = function() {
             adminDashDataService.blockedUsers().then(function(users) {

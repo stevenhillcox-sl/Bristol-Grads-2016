@@ -1,4 +1,4 @@
-<md-card class="tweet-container" ng-class="{disabled : (tweet.deleted||tweet.blocked)&&!tweet.display, all: admin}"> 
+<md-card class="tweet-container" ng-class="{disabled : (tweet.deleted||tweet.blocked)&&!tweet.display, all: admin, 'retweet-hidden':tweet.hide_retweet}"> 
     <md-card-header class="tweet-header">
         <md-card-avatar class="tweet-avatar">
             <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar tweet-avatar" />

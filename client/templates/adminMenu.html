@@ -42,13 +42,33 @@
             </md-menu-content>
         </md-menu>
         <md-menu>
+            <button ng-click="$mdOpenMenu()" class="admin-menu-button">
+            RETWEETS
+            </button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="setRetweetDisplayStatus('all')">
+                        Show all
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="setRetweetDisplayStatus('none')">
+                        Show none
+                    </md-button>
+                </md-menu-item>
+                 <md-menu-item>
+                    <md-button ng-click="setRetweetDisplayStatus('bristech_only')">
+                        Show only what @bristech retweets
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
             <button ng-click="logOut()" class="admin-menu-button">
                 LOG OUT
             </button>
             <md-menu-content>
             </md-menu-content>
         </md-menu>
-
     </md-menu-bar>
 </div>
-

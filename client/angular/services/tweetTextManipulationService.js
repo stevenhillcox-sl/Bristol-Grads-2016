@@ -19,8 +19,6 @@
                 tweet.text = getUntruncatedText(tweet);
                 tweet.entities = tweet.retweeted_status.entities;
                 tweet.truncated = tweet.retweeted_status.truncated;
-                tweet.favorite_count = tweet.retweeted_status.favorite_count;
-                tweet.retweet_count = tweet.retweeted_status.retweet_count;
             }
             tweet.text = addHashtag(tweet.text, tweet.entities.hashtags);
             tweet.text = addMention(tweet.text, tweet.entities.user_mentions);

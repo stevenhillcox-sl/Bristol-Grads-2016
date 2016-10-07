@@ -35,6 +35,7 @@
         function activate() {
             updateTweets();
             $interval(updateTweets, 500);
+            $interval(updateInteractions, 5000);
         }
 
         function updateTweets() {
@@ -58,6 +59,64 @@
                     setFlagsForTweets(vm.updates);
                 }
             });
+        }
+
+        function updateInteractions() {
+            var tempTweets = $scope.visitorsTweets.concat($scope.speakersTweets.concat($scope.pinnedTweets));
+            var tempExtraTweets = $scope.extraPinnedTweets.concat($scope.extraSpeakersTweets);
+            var topTweets = tempTweets.concat(tempExtraTweets);
+            var visibleTweets = topTweets.map(function(tweet) {
+                return {
+                    id_str: tweet.id_str,
+                    favorite_count: tweet.favorite_count,
+                    retweet_count: tweet.retweet_count
+                };
+            });
+            twitterWallDataService.updateInteractions(JSON.stringify(visibleTweets)).then(function(results) {
+                if (results) {
+                    results.favourites.forEach(function(favouriteUpdate) {
+                        $scope.visitorsTweets = setNewFavouriteCount($scope.visitorsTweets, favouriteUpdate);
+                        $scope.speakersTweets = setNewFavouriteCount($scope.speakersTweets, favouriteUpdate);
+                        $scope.pinnedTweets = setNewFavouriteCount($scope.pinnedTweets, favouriteUpdate);
+                        $scope.extraSpeakersTweets = setNewFavouriteCount($scope.extraSpeakersTweets, favouriteUpdate);
+                        $scope.extraPinnedTweets = setNewFavouriteCount($scope.extraPinnedTweets, favouriteUpdate);
+
+                    });
+                    results.retweets.forEach(function(retweetUpdate) {
+                        $scope.visitorsTweets = setNewRetweetCount($scope.visitorsTweets, retweetUpdate);
+                        $scope.speakersTweets = setNewRetweetCount($scope.speakersTweets, retweetUpdate);
+                        $scope.pinnedTweets = setNewRetweetCount($scope.pinnedTweets, retweetUpdate);
+                        $scope.extraSpeakersTweets = setNewRetweetCount($scope.extraSpeakersTweets, retweetUpdate);
+                        $scope.extraPinnedTweets = setNewRetweetCount($scope.extraPinnedTweets, retweetUpdate);
+                    });
+                }
+            });
+        }
+
+        function setNewFavouriteCount(tweets, favouriteUpdate) {
+            if (tweets) {
+                var updatedTweet = tweets.find(function(tweet) {
+                    return tweet.id_str === favouriteUpdate.id;
+                });
+                if (updatedTweet) {
+                    updatedTweet.favorite_count = favouriteUpdate.value;
+                }
+                return tweets;
+            }
+
+        }
+
+        function setNewRetweetCount(tweets, retweetUpdate) {
+            if (tweets) {
+                var updatedTweet = tweets.find(function(tweet) {
+                    return tweet.id_str === retweetUpdate.id;
+                });
+                if (updatedTweet) {
+                    updatedTweet.retweet_count = retweetUpdate.value;
+                }
+                return tweets;
+            }
+
         }
 
         function setStatusForArray(array, update, prop, found) {
@@ -253,6 +312,57 @@
             return 0;
         }
 
+        function setRetweet(update) {
+            $scope.allVisitorsTweets.forEach(function(tweet) {
+                switch (update.status) {
+                    case "all":
+                        tweet.hide_retweet = false;
+                        break;
+                    case "bristech_only":
+                        tweet.hide_retweet = (tweet.retweeted_status && (tweet.user.screen_name !== "bristech")) ? true : false;
+                        break;
+                    case "none":
+                        tweet.hide_retweet = tweet.retweeted_status ? true : false;
+                        break;
+                    default:
+                        tweet.hide_retweet = false;
+                        break;
+                }
+            });
+            $scope.allSpeakersTweets.forEach(function(tweet) {
+                switch (update.status) {
+                    case "all":
+                        tweet.hide_retweet = false;
+                        break;
+                    case "bristech_only":
+                        tweet.hide_retweet = (tweet.retweeted_status && (tweet.user.screen_name !== "bristech")) ? true : false;
+                        break;
+                    case "none":
+                        tweet.hide_retweet = tweet.retweeted_status ? true : false;
+                        break;
+                    default:
+                        tweet.hide_retweet = false;
+                        break;
+                }
+            });
+            $scope.allPinnedTweets.forEach(function(tweet) {
+                switch (update.status) {
+                    case "all":
+                        tweet.hide_retweet = false;
+                        break;
+                    case "bristech_only":
+                        tweet.hide_retweet = (tweet.retweeted_status && (tweet.user.screen_name !== "bristech")) ? true : false;
+                        break;
+                    case "none":
+                        tweet.hide_retweet = tweet.retweeted_status ? true : false;
+                        break;
+                    default:
+                        tweet.hide_retweet = false;
+                        break;
+                }
+            });
+        }
+
         function setFlagsForTweets(updates) {
             updates.forEach(function(update) {
                 if (update.type === "tweet_status") {
@@ -265,9 +375,35 @@
                     } else if (update.operation === "remove") {
                         updateSpeaker(update, false);
                     }
+                } else if (update.type === "retweet_display") {
+                    setRetweet(update);
                 }
             });
             splitTweetsIntoCategories();
+        }
+
+        if (!Array.prototype.find) {
+            Array.prototype.find = function(predicate) {
+                "use strict";
+                if (this === null) {
+                    throw new TypeError("Array.prototype.find called on null or undefined");
+                }
+                if (typeof predicate !== "function") {
+                    throw new TypeError("predicate must be a function");
+                }
+                var list = Object(this);
+                var length = list.length >>> 0;
+                var thisArg = arguments[1];
+                var value;
+
+                for (var i = 0; i < length; i++) {
+                    value = list[i];
+                    if (predicate.call(thisArg, value, i, list)) {
+                        return value;
+                    }
+                }
+                return undefined;
+            };
         }
     }
 })();

@@ -4,6 +4,7 @@ var Twitter = require("twitter");
 var google = require("googleapis");
 var verifier = require("google-id-token-verifier");
 var fs = require("fs");
+var mkdirp = require("mkdirp");
 
 var port = process.env.PORT || 8080;
 var oauthClientId = "627385202945-oqedl0onib41h39quc15pufqgqp8j8cu.apps.googleusercontent.com";
@@ -16,7 +17,7 @@ var twitterClient = new Twitter({
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
-var tweetSearcher = require("./server/tweetSearch")(twitterClient, fs, "./server/config/eventConfig.json");
+var tweetSearcher = require("./server/tweetSearch")(twitterClient, fs, "./server/config/eventConfig.json", mkdirp);
 
 var oauth2Client = new google.auth.OAuth2(oauthClientId, oauthSecret, REDIRECT_URL);
 var googleAuthoriser = oAuthGoogle(oauth2Client, verifier, fs, "./server/config/adminConfig.json");

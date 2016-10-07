@@ -1,4 +1,4 @@
-module.exports = function(client, fs, eventConfigFile) {
+module.exports = function(client, fs, eventConfigFile, mkdirp) {
 
     var tweetStore = [];
     var tweetUpdates = [];
@@ -8,7 +8,8 @@ module.exports = function(client, fs, eventConfigFile) {
     var speakers = [];
     var officialUsers = [];
 
-    var rateLimitFile = "./server/temp/rateLimitRemaining.json";
+    var rateLimitDir = "./server/temp/";
+    var rateLimitFile = rateLimitDir + "rateLimitRemaining.json";
 
     function tweetType(tweet) {
         if (officialUsers.indexOf(tweet.user.screen_name) !== -1) {
@@ -44,6 +45,56 @@ module.exports = function(client, fs, eventConfigFile) {
             startIdx: tweetStore.length,
         });
         tweetStore = tweetStore.concat(tweets);
+    }
+
+    function updateInteractions(visibleTweets, callback) {
+        var interactionUpdates = {
+            favourites: [],
+            retweets: []
+        };
+        var tweets = JSON.parse(visibleTweets);
+        var ids = tweets.map(function(tweet) {
+            return tweet.id_str;
+        });
+        var params = {
+            id: ids.join(),
+            trim_user: true
+
+        };
+        if (apiResources["statuses/lookup"].requestsRemaining > 0) {
+            client.get("statuses/lookup", params, function(error, data, response) {
+                if (data) {
+                    data.forEach(function(tweet) {
+                        var previous = tweets.find(function(inTweet) {
+                            return tweet.id_str === inTweet.id_str;
+                        });
+                        if (previous.favorite_count !== tweet.favorite_count) {
+                            interactionUpdates.favourites.push({
+                                id: tweet.id_str,
+                                value: tweet.favorite_count
+                            });
+                        }
+                        if (previous.retweet_count !== tweet.retweet_count) {
+                            interactionUpdates.retweets.push({
+                                id: tweet.id_str,
+                                value: tweet.retweet_count
+                            });
+                        }
+                    });
+                    apiResources["statuses/lookup"].requestsRemaining = response.headers["x-rate-limit-remaining"];
+                    apiResources["statuses/lookup"].resetTime = (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000;
+                    callback(null, interactionUpdates);
+                } else {
+                    console.log(error);
+                    callback(error);
+                }
+            });
+        } else {
+            var lookupTimer = setTimeout(function() {
+                apiResources["statuses/lookup"].requestsRemaining = 1;
+            }, apiResources["statuses/lookup"].resetTime - new Date().getTime());
+            callback("too many API requests right now");
+        }
     }
 
     function findLast(arr, predicate, thisArg) {
@@ -122,6 +173,11 @@ module.exports = function(client, fs, eventConfigFile) {
                 addTweetItem(officialTweets, "official");
             }
         },
+        "statuses/lookup": {
+            basePath: "statuses",
+            requestsRemaining: 0,
+            resetTime: 0
+        },
     };
 
     var searchUpdater;
@@ -153,15 +209,26 @@ module.exports = function(client, fs, eventConfigFile) {
         // Callback that receives the rate limit data from `getApplicationRateLimits` and loops every 5 seconds until
         // the server has saved the rate limit data successfully; calls `beginResourceUpdates` on success
         function rateSaveLoop(rateLimitData) {
-            fs.writeFile(rateLimitFile, JSON.stringify(rateLimitData), function(err) {
-                if (!err) {
-                    beginResourceUpdates();
+            mkdirp(rateLimitDir, function(err) {
+                // Count a return value of `EEXIST` as successful, as it means the directory already exists
+                if (!err || err.code === "EEXIST") {
+                    fs.writeFile(rateLimitFile, JSON.stringify(rateLimitData), function(err) {
+                        if (!err) {
+                            beginResourceUpdates();
+                        } else {
+                            repeatLoop();
+                        }
+                    });
                 } else {
-                    var loopDelay = 5000;
-                    console.log("Could not save rate limit data, retrying after " + loopDelay + "ms...");
-                    setTimeout(rateSaveLoop.bind(undefined, rateLimitData), loopDelay);
+                    repeatLoop();
                 }
             });
+
+            function repeatLoop() {
+                var loopDelay = 5000;
+                console.log("Could not save rate limit data, retrying after " + loopDelay + "ms...");
+                setTimeout(rateSaveLoop.bind(undefined, rateLimitData), loopDelay);
+            }
         }
 
         // Begins the loop of collecting tweets from the Twitter API
@@ -182,7 +249,9 @@ module.exports = function(client, fs, eventConfigFile) {
         getSpeakers: getSpeakers,
         addSpeaker: addSpeaker,
         removeSpeaker: removeSpeaker,
-        displayBlockedTweet: displayBlockedTweet
+        displayBlockedTweet: displayBlockedTweet,
+        setRetweetDisplayStatus: setRetweetDisplayStatus,
+        updateInteractions: updateInteractions
     };
 
     function checkRateLimitSafety(callback) {
@@ -246,6 +315,14 @@ module.exports = function(client, fs, eventConfigFile) {
     function displayBlockedTweet(tweetId) {
         setTweetStatus(tweetId, {
             display: true
+        });
+    }
+
+    function setRetweetDisplayStatus(status) {
+        tweetUpdates.push({
+            type: "retweet_display",
+            since: new Date(),
+            status: status
         });
     }
 
@@ -322,8 +399,11 @@ module.exports = function(client, fs, eventConfigFile) {
 
     function getApplicationRateLimits(callback) {
         var resourceNames = Object.keys(apiResources);
-        var resourcePaths = resourceNames.map(function(resourceName) {
-            return apiResources[resourceName].basePath;
+        var resourcePaths = [];
+        resourceNames.forEach(function(resourceName) {
+            if (resourcePaths.indexOf(apiResources[resourceName].basePath) === -1) {
+                resourcePaths.push(apiResources[resourceName].basePath);
+            }
         });
         var query = {
             resources: resourcePaths.join(","),
@@ -334,8 +414,8 @@ module.exports = function(client, fs, eventConfigFile) {
                 resetTime: (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000,
             };
             if (data) {
-                resourceNames.forEach(function(name, idx) {
-                    var resourceProfile = data.resources[resourcePaths[idx]]["/" + name];
+                resourceNames.forEach(function(name) {
+                    var resourceProfile = data.resources[apiResources[name].basePath]["/" + name];
                     apiResources[name].requestsRemaining = resourceProfile.remaining;
                     apiResources[name].resetTime = (resourceProfile.reset + 1) * 1000;
                 });
