@@ -52,6 +52,7 @@
 	display: flex; 
 	align-content: center; 
 	align-items: center;
+	max-height: 235px !important;
 }
 
 .tweet-footer {
@@ -74,8 +75,8 @@
 }
 
 .tweet-media {
-	max-height: 100%; 
-	max-width: 100%;
+	max-height: inherit; 
+	max-width: inherit;
 	margin: 5px;
 }
 
