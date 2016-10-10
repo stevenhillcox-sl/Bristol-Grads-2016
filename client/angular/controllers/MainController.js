@@ -79,10 +79,7 @@
             $scope.screenWidth = window.innerWidth ||
                 document.documentElement.clientWidth ||
                 document.body.clientWidth;
-            console.log($scope.screenWidth);
-            console.log($scope.screenHeight);
             tweetColumnList.forEach(function(tweetColumn, colIdx) {
-                console.log(tweetColumn);
                 var baseHeight = (($scope.screenHeight - (2 * tweetMargin * columnDataList[colIdx].slots)) / columnDataList[colIdx].slots);
                 tweetColumn.forEach(function(tweet) {
                     tweet.height = tweet.entities.media !== undefined ? ((baseHeight * 2) + (tweetMargin * 2)) : baseHeight;
