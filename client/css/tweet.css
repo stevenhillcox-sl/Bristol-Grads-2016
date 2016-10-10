@@ -1,0 +1,117 @@
+.tweet {
+	height: 170px;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+}
+
+.tweet-image {
+	height: 370px;
+	padding: 0px;
+	margin: 0px;
+	width: 95%;
+	
+}
+
+.all {
+	margin: 10px 0px !important;
+}
+
+.disabled {
+	opacity: 0.5;
+	transition: .5s;
+}
+
+.enabled {
+	opacity: 1;
+	transition: .5s;
+}
+
+.retweet-hidden {
+	opacity: 0.5;
+}
+
+.tweet-container {
+	margin: 0px; 
+	height: 100%;
+	padding: 16px;
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	border-radius: 15px;
+}
+
+.tweet-header {
+	height: 30px;
+	margin: 4px; 
+	margin-top: 0px;
+	padding: 0px;
+}
+
+.tweet-content {
+	margin: 4px;
+	padding: 0px; 
+	display: flex; 
+	align-content: center; 
+	align-items: center;
+	max-height: 235px !important;
+}
+
+.tweet-footer {
+	height: 20px;
+	margin: 4px;
+	padding: 0px;
+}
+
+.tweet-avatar {
+	height: 100%;
+	width: 30px;
+}
+
+.header-name {
+	font-size: 18px; 
+	line-height: 18px;
+}
+
+.header-username {
+	line-height: 14px;
+}
+
+.tweet-media {
+	max-height: inherit; 
+	max-width: inherit;
+	margin: 5px;
+}
+
+.column-flex-around {
+	display: flex; 
+	flex-direction: column; 
+	justify-content: space-around;
+}
+
+.pinned-button-selected {
+	color : #FFC400;
+}
+
+.delete-button-selected {
+	color : #FF1744;
+}
+
+.blocked-button-selected {
+	color : #FF1744;
+}
+
+b {
+	font-weight: 400;
+	color: #1b95e0;
+}
+
+.fav-icon {
+	color:#E81C4F;
+}
+
+.retweet-icon {
+	color:#19CF86
+}

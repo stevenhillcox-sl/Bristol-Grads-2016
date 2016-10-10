@@ -1,7 +1,12 @@
-<div layout="column" layout-padding layout-fill">
+<div layout="column" class="column">
     <ng-include
         src="'/templates/tweet.html'"
-        ng-repeat="tweet in getTweets() | orderBy : tweetDate : true track by $index"
-        ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+        ng-repeat="tweet in speakersTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{'tweet-image' : hasImage(tweet), 'tweet' : !hasImage(tweet), 'all': admin}"
+    ></ng-include>
+    <ng-include
+        src="'/templates/tweet.html'"
+        ng-repeat="tweet in extraSpeakersTweets | orderBy : tweetDate : true track by $index"
+        ng-class="{'tweet-image' : hasImage(tweet), 'tweet' : !hasImage(tweet), 'all': admin}"
     ></ng-include>
 </div>

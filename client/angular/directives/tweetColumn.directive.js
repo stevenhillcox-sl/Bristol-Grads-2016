@@ -6,7 +6,14 @@
             restrict: "E",
             scope: {
                 tweets: "=",
+                visitorsTweets: "=",
+                speakersTweets: "=",
+                pinnedTweets: "=",
+                extraPinnedTweets: "=",
+                extraSpeakersTweets: "=",
                 admin: "=",
+                switch: "=",
+                isMobile: "=",
                 position: "@",
                 setDeletedStatus: "&",
                 addBlockedUser: "&",
@@ -15,9 +22,28 @@
                 toggleBlocked: "&",
             },
             templateUrl: function(element, attrs) {
-                return "templates/tweet-column-" + attrs.position + ".html";
+                var admin = "templates/tweet-column-" + attrs.position + "-admin.html";
+                var client = "templates/tweet-column-" + attrs.position + ".html";
+                return client;
             },
             link: function(scope, element, attrs) {
+                scope.hasImage = function(tweet) {
+                    return tweet.entities.media !== undefined;
+                };
+                scope.getSize = function(text) {
+                    var size;
+                    var charCount = text.toString().split("").length;
+                    if (charCount < 85) {
+                        size = "x-large";
+                    } else if (charCount < 120) {
+                        size = "large";
+                    } else {
+                        size = "medium";
+                    }
+                    return {
+                        "font-size": size
+                    };
+                };
                 scope.getTweets = function() {
                     return (scope.admin ? scope.tweets : scope.tweets.filter(function(tweet) {
                         return (!(tweet.deleted || tweet.blocked || tweet.hide_retweet) || tweet.display);

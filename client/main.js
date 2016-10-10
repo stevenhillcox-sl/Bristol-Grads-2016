@@ -8,3 +8,4 @@ require("./angular/services/twitterWallDataService.js");
 require("./angular/directives/tweetColumn.directive.js");
 
 require("./css/main.css");
+require("./css/tweet.css");

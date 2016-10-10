@@ -203,10 +203,6 @@ describe("MainController", function() {
         };
 
         testTweets = [tweet1, tweet2];
-        testDeleteTweets = [deletedTweet1, tweet2];
-        testBlockedTweets = [tweet1, blockedTweet2];
-        testPinnedTweets = [pinnedTweet1, tweet2];
-        testSpeakerTweets = [tweet1, speakerTweet2];
         testRetweetDisplayTweets = [retweetedTweet1, retweetedTweet2];
         testInteractedTweets = [favouritedTweet1, interactedTweet2];
 
@@ -321,7 +317,7 @@ describe("MainController", function() {
             deferredGetTweetsResponse.resolve(testTweetData);
             $testScope.$apply();
             expect(twitterWallDataService.getTweets).toHaveBeenCalled();
-            expect($testScope.tweets).toEqual(testTweets);
+            expect($testScope.allVisitorsTweets).toEqual(testTweets);
         });
     });
 
@@ -331,7 +327,7 @@ describe("MainController", function() {
             $testScope.$apply();
         });
         it("appends new tweets received to the scope", function() {
-            expect($testScope.tweets).toEqual(testTweets);
+            expect($testScope.allVisitorsTweets).toEqual(testTweets);
         });
         it("uses the tweet text manipulation service to format tweets for display", function() {
             expect(tweetTextManipulationService.updateTweet).toHaveBeenCalledTimes(testTweets.length);
@@ -354,23 +350,25 @@ describe("MainController", function() {
                 $interval.flush(500);
             });
 
-            function getOldTweetTests(servedData, expectedTweets) {
+            function getOldTweetTests(servedData, expectedVisitorsTweets, expectedPinnedTweets, expectedSpeakersTweets) {
                 return function() {
                     beforeEach(function() {
                         deferredGetTweetsResponse.resolve(servedData);
                         $testScope.$apply();
                     });
-                    it("updates tweets by adding the new status flag", function() {
-                        expect($testScope.tweets).toEqual(expectedTweets);
+                    it("updates tweets by adding the new status flag and splits them into different arrays", function() {
+                        expect($testScope.allVisitorsTweets).toEqual(expectedVisitorsTweets);
+                        expect($testScope.allPinnedTweets).toEqual(expectedPinnedTweets);
+                        expect($testScope.allSpeakersTweets).toEqual(expectedSpeakersTweets);
                     });
                 };
             }
 
-            describe("Pinned tweets", getOldTweetTests(testPinnedData, testPinnedTweets));
-            describe("Deleted tweets", getOldTweetTests(testDeletedData, testDeleteTweets));
-            describe("Blocked tweets", getOldTweetTests(testBlockedData, testBlockedTweets));
-            describe("Speaker tweets", getOldTweetTests(testSpeakerData, testSpeakerTweets));
-            describe("Retweet display", getOldTweetTests(testRetweetDisplayData, testRetweetDisplayTweets));
+            describe("Pinned tweets", getOldTweetTests(testPinnedData, [tweet2], [pinnedTweet1], []));
+            describe("Deleted tweets", getOldTweetTests(testDeletedData, [deletedTweet1, tweet2], [], []));
+            describe("Blocked tweets", getOldTweetTests(testBlockedData, [tweet1, blockedTweet2], [], []));
+            describe("Speaker tweets", getOldTweetTests(testSpeakerData, [tweet1], [], [speakerTweet2]));
+            describe("Retweet display", getOldTweetTests(testRetweetDisplayData, testRetweetDisplayTweets, [], []));
         });
 
         describe("On new tweets", function() {
@@ -384,7 +382,7 @@ describe("MainController", function() {
                 $testScope.$apply();
             };
 
-            function getNewTweetTests(serverData, expectedTweets) {
+            function getNewTweetTests(serverData, expectedVisitorsTweets, expectedPinnedTweets, expectedSpeakersTweets) {
                 return function() {
                     beforeEach(function() {
                         deferredGetTweetsResponse.resolve(serverData);
@@ -395,17 +393,19 @@ describe("MainController", function() {
                         deferredGetTweetsResponse.resolve(testTweetData);
                         $testScope.$apply();
                     });
-                    it("updates tweets by adding the new status flag", function() {
-                        expect($testScope.tweets).toEqual(expectedTweets);
+                    it("updates tweets by adding the new status flag and splits the tweets into different arrays", function() {
+                        expect($testScope.allVisitorsTweets).toEqual(expectedVisitorsTweets);
+                        expect($testScope.allPinnedTweets).toEqual(expectedPinnedTweets);
+                        expect($testScope.allSpeakersTweets).toEqual(expectedSpeakersTweets);
                     });
                 };
             }
 
-            describe("Pinned tweets", getNewTweetTests(testPinnedData, testPinnedTweets));
-            describe("Deleted tweets", getNewTweetTests(testDeletedData, testDeleteTweets));
-            describe("Blocked tweets", getNewTweetTests(testBlockedData, testBlockedTweets));
-            describe("Speaker tweets", getNewTweetTests(testSpeakerData, testSpeakerTweets));
-            describe("Retweet display", getNewTweetTests(testRetweetDisplayData, testRetweetDisplayTweets));
+            describe("Pinned tweets", getNewTweetTests(testPinnedData, [tweet2], [pinnedTweet1], []));
+            describe("Deleted tweets", getNewTweetTests(testDeletedData, [deletedTweet1, tweet2], [], []));
+            describe("Blocked tweets", getNewTweetTests(testBlockedData, [tweet1, blockedTweet2], [], []));
+            describe("Speaker tweets", getNewTweetTests(testSpeakerData, [tweet1], [], [speakerTweet2]));
+            describe("Retweet display", getNewTweetTests(testRetweetDisplayData, testRetweetDisplayTweets, [], []));
         });
     });
 
@@ -438,7 +438,7 @@ describe("MainController", function() {
         });
 
         it("updates favourite and retweet counts", function() {
-            expect($testScope.tweets).toEqual(testInteractedTweets);
+            expect($testScope.visitorsTweets).toEqual(testInteractedTweets);
         });
 
     });

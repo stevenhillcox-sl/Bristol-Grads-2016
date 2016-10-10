@@ -20,11 +20,40 @@
         $scope.errorMessage = "";
         $scope.blockedUsers = [];
 
+        // arrays to visualise in the 3 columns -> cut off to fit the page
+        $scope.visitorsTweets = [];
+        $scope.speakersTweets = [];
+        $scope.pinnedTweets = [];
+
+        // all tweets in that cathegory -> without a cut off
+        $scope.allVisitorsTweets = [];
+        $scope.allSpeakersTweets = [];
+        $scope.allPinnedTweets = [];
+
+        $scope.extraPinnedTweets = [];
+        $scope.extraSpeakersTweets = [];
+
         $scope.setDeletedStatus = adminDashDataService.setDeletedStatus;
         $scope.setPinnedStatus = adminDashDataService.setPinnedStatus;
 
         $scope.addSpeaker = addSpeaker;
         $scope.removeSpeaker = removeSpeaker;
+        $scope.switch = false;
+        $scope.hasChanged = false;
+        $scope.isMobile = false; //initiate as false
+        $scope.tab = 1;
+
+        getDevice();
+
+        $scope.changeTab = function(value) {
+            $scope.tab = value;
+        };
+
+        function getDevice() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $scope.isMobile = true;
+            }
+        }
 
         $scope.displayBlockedTweet = adminDashDataService.displayBlockedTweet;
 
@@ -92,6 +121,11 @@
                 });
             });
         }
+
+        $scope.check = function(value) {
+            $scope.hasChanged = true;
+            $scope.switch = !value;
+        };
 
         function addSpeaker() {
             adminDashDataService.addSpeaker($scope.ctrl.speaker).then(function(result) {
