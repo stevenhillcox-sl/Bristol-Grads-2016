@@ -120,7 +120,8 @@ html::-webkit-scrollbar {
 
 .tweet-media { 
 	max-height: 100%;
-	max-width: 50%;
+	max-width: 60%;
+	object-fit: contain;
 }
 
 b {
