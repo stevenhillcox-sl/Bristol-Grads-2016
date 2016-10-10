@@ -5,11 +5,12 @@
 			Get involved: tweet with #bristech2016
 		</div>
 	</div>
-	<ng-include
-	flex
-	src="'/templates/tweet.html'"
-	ng-repeat="tweet in tweetColumn"
-	ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
-	class="tweet-card"
-	></ng-include>
+	<div layout="column" layout-align="center center">
+		<ng-include
+		flex
+		src="'/templates/tweet.html'"
+		ng-repeat="tweet in tweetColumn"
+		ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+		></ng-include>
+	</div>
 </div>

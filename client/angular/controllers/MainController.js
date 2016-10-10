@@ -13,11 +13,17 @@
     function MainController($scope, twitterWallDataService, $sce, tweetTextManipulationService, columnAssignmentService, $interval) {
         var vm = this;
 
+<<<<<<< d6ac8f7d1f2f2cfe1d26fae621d8261e28c80d5c
         $scope.displayColumns = [
             [],
             [],
             []
         ];
+=======
+        var tweetMargin = 7;
+        var slots = [5, 5, 5, 5];
+
+>>>>>>> variable margins
         $scope.tweets = [];
         $scope.tweetColumnList = [];
         vm.updates = [];
@@ -66,6 +72,23 @@
             $scope.tweetColumnList[0] = $scope.tweets.slice(0, 4);
             $scope.tweetColumnList[1] = $scope.tweets.slice(4, 9);
             $scope.tweetColumnList[2] = $scope.tweets.slice(9, 14);
+            $scope.tweetColumnList[3] = $scope.tweets.slice(14, 19);
+            setTweetHeights($scope.tweetColumnList);
+        }
+
+        function setTweetHeights(tweetColumnList) {
+            $scope.screenHeight = window.innerHeight ||
+                document.documentElement.clientHeight ||
+                document.body.clientHeight;
+            $scope.screenWidth = window.innerWidth ||
+                document.documentElement.clientWidth ||
+                document.body.clientWidth;
+            tweetColumnList.forEach(function(tweetColumn, colIdx) {
+                var baseHeight = $scope.screenHeight / slots[colIdx];
+                tweetColumn.forEach(function(tweet) {
+                    tweet.height = tweet.entities.media !== undefined ? ((baseHeight * 2) + (tweetMargin * 2)) : baseHeight;
+                });
+            });
         }
 
         function updateInteractions() {
@@ -154,6 +177,34 @@
                 }
             });
             return tweets;
+        };
+
+        $scope.hasImage = function(tweet) {
+            return tweet.entities.media !== undefined;
+        };
+        $scope.getSize = function(text) {
+            var size;
+            var charCount = text.toString().split("").length;
+            if (charCount < 85) {
+                size = "x-large";
+            } else if (charCount < 120) {
+                size = "large";
+            } else {
+                size = "medium";
+            }
+            return {
+                "font-size": size
+            };
+        };
+        $scope.getTweetDimensions = function(tweet) {
+            console.log(tweet.height);
+            return {
+                "height": tweet.height + "px",
+                "margin-top": tweetMargin + "px",
+                "margin-bottom": tweetMargin + "px",
+                "margin-left": tweetMargin + "px",
+                "margin-right": tweetMargin + "px"
+            };
         };
 
         if (!Array.prototype.find) {

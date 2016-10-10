@@ -1,4 +1,8 @@
-<md-content layout="row" layout-padding class="container">
-    <ng-include flex src="'/templates/tweet-column.html'" ng-repeat="tweetColumn in tweetColumnList track by $index">
+<md-content layout="row" class="container">
+    <ng-include 
+    flex 
+    src="'/templates/tweet-column.html'" 
+    ng-repeat="tweetColumn in tweetColumnList track by $index" 
+    ng-init="colIndex = $index">
     </ng-include>
 </md-cotent>

@@ -23,10 +23,9 @@ html::-webkit-scrollbar {
 }
 
 .banner {
-	margin-left: 1%;
-	margin-top:1%;
+	margin:1%;
 	width: 95%;
-	border-radius: 15px;
+	border-radius: 20px;
 }
 
 .logo {
@@ -120,7 +119,7 @@ html::-webkit-scrollbar {
 }
 
 .tweet-media { 
-	max-height: 300px;
+	max-height: 220px;
 	max-width: 50%;
 }
 
@@ -138,6 +137,7 @@ b {
 }
 
 .tweet-container {
-	border-radius : 15px;
+	justify-content: space-between;
+	border-radius : 7px;
 }
 
