@@ -18,10 +18,8 @@
             [],
             []
         ];
-        var tweetMargin = 7;
-        var slots = [5, 5, 5, 5];
+
         var tweetMargin = 10;
-        var slots = [4, 5, 5, 5];
 
         $scope.tweets = [];
         $scope.tweetColumnList = [];
@@ -35,13 +33,15 @@
             new columnAssignmentService.ColumnData(5, function(tweet) {
                 return tweet.pinned === true;
             }, chronologicalOrdering),
-            new columnAssignmentService.ColumnData(6, function(tweet) {
+            new columnAssignmentService.ColumnData(5, function(tweet) {
                 return tweet.wallPriority === true;
             }, chronologicalOrdering),
-            new columnAssignmentService.ColumnData(6, function(tweet) {
+            new columnAssignmentService.ColumnData(5, function(tweet) {
                 return true;
             }, chronologicalOrdering),
         ];
+
+        $scope.columnDataList = columnDataList;
 
         activate();
 
@@ -68,11 +68,8 @@
                     displayTweets($scope.tweets, columnDataList);
                 }
             });
-            $scope.tweetColumnList[0] = $scope.tweets.slice(0, 4);
-            $scope.tweetColumnList[1] = $scope.tweets.slice(4, 9);
-            $scope.tweetColumnList[2] = $scope.tweets.slice(9, 14);
             //$scope.tweetColumnList[3] = $scope.tweets.slice(14, 19);
-            setTweetHeights($scope.tweetColumnList);
+            setTweetHeights($scope.displayColumns);
         }
 
         function setTweetHeights(tweetColumnList) {
@@ -82,8 +79,11 @@
             $scope.screenWidth = window.innerWidth ||
                 document.documentElement.clientWidth ||
                 document.body.clientWidth;
+            console.log($scope.screenWidth);
+            console.log($scope.screenHeight);
             tweetColumnList.forEach(function(tweetColumn, colIdx) {
-                var baseHeight = (($scope.screenHeight - (2 * tweetMargin * slots[colIdx])) / slots[colIdx]);
+                console.log(tweetColumn);
+                var baseHeight = (($scope.screenHeight - (2 * tweetMargin * columnDataList[colIdx].slots)) / columnDataList[colIdx].slots);
                 tweetColumn.forEach(function(tweet) {
                     tweet.height = tweet.entities.media !== undefined ? ((baseHeight * 2) + (tweetMargin * 2)) : baseHeight;
                 });
@@ -196,6 +196,7 @@
             };
         };
         $scope.getTweetDimensions = function(tweet) {
+            //console.log(tweet.height);
             return {
                 "height": tweet.height + "px",
                 "margin-top": tweetMargin + "px",

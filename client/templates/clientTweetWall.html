@@ -2,7 +2,7 @@
     <ng-include 
     flex 
     src="'/templates/tweet-column.html'" 
-    ng-repeat="tweetColumn in tweetColumnList track by $index" 
+    ng-repeat="displayColumn in displayColumns track by $index" 
     ng-init="colIndex = $index">
     </ng-include>
 </md-cotent>
