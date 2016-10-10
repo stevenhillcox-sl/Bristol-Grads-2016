@@ -1,4 +1,4 @@
-<md-card>
+<md-card class="tweet-container">
     <md-card-header>
         <md-card-avatar>
             <img ng-src="{{tweet.user.profile_image_url_https}}" class="md-user-avatar" />
@@ -10,18 +10,18 @@
                 @{{tweet.user.screen_name}}
             </span>
         </md-card-header-text>
-        <md-card-icon-actions ng-if="admin">
+        <md-card-icon-actions ng-if="loggedIn">
             <ng-include src="'/templates/tweet-admin-controls.html'"></ng-include>
         </md-card-icon-actions>
-        <md-card-icon-actions ng-if="!admin && tweet.pinned">
+        <md-card-icon-actions ng-if="!loggedIn && tweet.pinned">
             <md-button class="md-icon-button">
                 <md-icon class="pinned-button-selected"><i class="material-icons">star_rate</i></md-icon>
             </md-button>
         </md-card-icon-actions>
     </md-card-header>
-    <img class="md-card-image tweet-media" ng-if="tweet.entities.media[0].media_url_https!==undefined" ng-src="{{tweet.entities.media[0].media_url_https}}"/>
-    <md-card-content>
+    <md-card-content layout="row" layout-padding layout-align="center center">
         <div ng-bind-html="tweet.text"></div>
+        <img class="md-media-sm tweet-media" ng-if="tweet.entities.media[0].media_url_https!==undefined" ng-src="{{tweet.entities.media[0].media_url_https}}"/>
     </md-card-content>
     <md-card-footer>
         <div layout="row" layout-align="end center" layout-wrap>

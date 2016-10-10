@@ -1,22 +1,22 @@
-<md-button ng-hide="(tweet.blocked&&!tweet.display)||tweet.deleted" class="md-icon-button" ng-click="setPinnedStatus({id: tweet.id_str, status: !tweet.pinned})" ng-attr-title="{{tweet.pinned ? 'Unpin tweet' : 'Pin tweet'}}">
+<md-button ng-hide="(tweet.blocked&&!tweet.display)||tweet.deleted" class="md-icon-button" ng-click="setPinnedStatus(tweet.id_str, !tweet.pinned)" ng-attr-title="{{tweet.pinned ? 'Unpin tweet' : 'Pin tweet'}}">
     <md-icon ng-class="{'pinned-button-selected' : tweet.pinned}">
         <i class="material-icons">star_rate</i>
     </md-icon>
 </md-button>
 
-<md-button ng-hide="tweet.blocked&&!tweet.display" class="md-icon-button" ng-click="setDeletedStatus({id: tweet.id_str, status: !tweet.deleted})" ng-attr-title="{{tweet.deleted ? 'Undelete tweet' : 'Delete tweet'}}">
+<md-button ng-hide="tweet.blocked&&!tweet.display" class="md-icon-button" ng-click="setDeletedStatus(tweet.id_str, !tweet.deleted)" ng-attr-title="{{tweet.deleted ? 'Undelete tweet' : 'Delete tweet'}}">
     <md-icon ng-class="{'delete-button-selected' : tweet.deleted}">
         <i class="material-icons">clear</i>
     </md-icon>
 </md-button>
 
-<md-button ng-show="tweet.blocked&&!tweet.display" class="md-icon-button" ng-click="displayBlockedTweet({id: tweet.id_str})" title="Display tweet">
+<md-button ng-show="tweet.blocked&&!tweet.display" class="md-icon-button" ng-click="displayBlockedTweet(tweet.id_str)" title="Display tweet">
     <md-icon>
         <i class="material-icons">done</i>
     </md-icon>
 </md-button>
 
-<md-button class="md-icon-button" ng-click="toggleBlocked({name: tweet.user.name, screen_name: tweet.user.screen_name, blocked: tweet.blocked})"  ng-attr-title="{{tweet.blocked ? 'Unblock this user' : 'Block this user'}}">
+<md-button class="md-icon-button" ng-click="toggleBlocked(tweet.user.name, tweet.user.screen_name, tweet.blocked)"  ng-attr-title="{{tweet.blocked ? 'Unblock this user' : 'Block this user'}}">
     <md-icon ng-class="{'blocked-button-selected' : tweet.blocked}">
         <i class="material-icons">do_not_disturb</i>
     </md-icon>

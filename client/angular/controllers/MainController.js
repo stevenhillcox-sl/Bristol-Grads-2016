@@ -19,6 +19,7 @@
             []
         ];
         $scope.tweets = [];
+        $scope.tweetColumnList = [];
         vm.updates = [];
 
         // Ordering function such that newer tweets precede older tweets
@@ -62,6 +63,9 @@
                     displayTweets($scope.tweets, columnDataList);
                 }
             });
+            $scope.tweetColumnList[0] = $scope.tweets.slice(0, 4);
+            $scope.tweetColumnList[1] = $scope.tweets.slice(4, 9);
+            $scope.tweetColumnList[2] = $scope.tweets.slice(9, 14);
         }
 
         function updateInteractions() {

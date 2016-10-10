@@ -3,10 +3,6 @@ html::-webkit-scrollbar {
 }
 
 .container {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
 	height: 100%;
 }
@@ -27,7 +23,10 @@ html::-webkit-scrollbar {
 }
 
 .banner {
-	width: 100%;
+	margin-left: 1%;
+	margin-top:1%;
+	width: 95%;
+	border-radius: 15px;
 }
 
 .logo {
@@ -121,8 +120,8 @@ html::-webkit-scrollbar {
 }
 
 .tweet-media { 
-	max-height: 500px;
-	object-fit: cover;
+	max-height: 300px;
+	max-width: 50%;
 }
 
 b {
@@ -137,3 +136,8 @@ b {
 .retweet-icon {
 	color:#19CF86
 }
+
+.tweet-container {
+	border-radius : 15px;
+}
+
