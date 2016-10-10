@@ -119,7 +119,7 @@ html::-webkit-scrollbar {
 }
 
 .tweet-media { 
-	max-height: 220px;
+	max-height: 100%;
 	max-width: 50%;
 }
 
@@ -138,6 +138,6 @@ b {
 
 .tweet-container {
 	justify-content: space-between;
-	border-radius : 7px;
+	border-radius : 10px;
 }
 
