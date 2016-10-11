@@ -1,6 +1,7 @@
 describe("MainController", function() {
 
     var $window;
+    var $document;
     var $testScope;
     var $q;
     var $interval;
@@ -343,8 +344,9 @@ describe("MainController", function() {
         module("TwitterWallApp");
     });
 
-    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_, _$window_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_, _$window_, _$document_) {
         $window = _$window_;
+        $document = _$document_;
         $window.innerHeight = 500;
         $testScope = _$rootScope_.$new();
         $q = _$q_;
@@ -389,6 +391,7 @@ describe("MainController", function() {
             columnAssignmentService: columnAssignmentService,
             $interval: $interval,
             $window: $window,
+            $document: $document,
         });
     }));
 
@@ -532,5 +535,48 @@ describe("MainController", function() {
             expect($testScope.tweets).toEqual(testInteractedTweets);
         });
 
+    });
+
+    describe("setTweetHeights", function() {
+        it("should assign a numerical value to the displayHeightPx property of each tweet", function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.$apply();
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayHeightPx).toEqual(jasmine.any(Number));
+            });
+        });
+
+        describe("On changed data", function() {
+            var initialDisplayHeight;
+
+            beforeEach(function() {
+                deferredGetTweetsResponse.resolve(testTweetData);
+                $testScope.$apply();
+                initialDisplayHeight = $testScope.tweets[0].displayHeightPx;
+                deferredGetTweetsResponse = $q.defer();
+                twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
+                deferredGetTweetsResponse.resolve({
+                    tweets: [],
+                    updates: []
+                });
+                $testScope.$apply();
+            });
+
+            it("should assign a smaller displayHeightPx value when the window is smaller", function() {
+                $window.innerHeight = 400;
+                $interval.flush(500);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayHeightPx).toBeLessThan(initialDisplayHeight);
+            });
+
+            it("should assign a smaller displayHeightPx value when the window is smaller", function() {
+                $testScope.tweets[0].entities.media = {
+                    image: "dog pic",
+                };
+                $interval.flush(500);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayHeightPx).toBeGreaterThan(initialDisplayHeight);
+            });
+        });
     });
 });

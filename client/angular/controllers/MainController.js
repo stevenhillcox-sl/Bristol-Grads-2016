@@ -9,9 +9,19 @@
         "columnAssignmentService",
         "$interval",
         "$window",
+        "$document",
     ];
 
-    function MainController($scope, twitterWallDataService, $sce, tweetTextManipulationService, columnAssignmentService, $interval, $window) {
+    function MainController(
+        $scope,
+        twitterWallDataService,
+        $sce,
+        tweetTextManipulationService,
+        columnAssignmentService,
+        $interval,
+        $window,
+        $document
+    ) {
         var vm = this;
 
         $scope.displayColumns = [
@@ -73,11 +83,11 @@
             });
         }
 
-        function setTweetHeights(tweetColumnList) {
+        function setTweetHeights(displayColumns) {
             $scope.screenHeight = $window.innerHeight ||
-                document.documentElement.clientHeight ||
-                document.body.clientHeight;
-            tweetColumnList.forEach(function(tweetColumn, colIdx) {
+                $document.documentElement.clientHeight ||
+                $document.body.clientHeight;
+            displayColumns.forEach(function(tweetColumn, colIdx) {
                 var baseSlotHeight = (($scope.screenHeight - //the total screen height
                         (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
                         ($scope.screenHeight * (columnDataList[colIdx].extraContentSpacing * 0.01))) / //remove any space taken up by extra content
