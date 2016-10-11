@@ -83,7 +83,7 @@
                     columnDataList[colIdx].slots); //divide the remaining available space between slots
                 tweetColumn.forEach(function(tweet) {
                     //tweets with pictures have as much room as two normal tweets + the space between them
-                    tweet.height = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
+                    tweet.displayHeightPx = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
                 });
             });
         }
@@ -192,7 +192,7 @@
         };
         $scope.getTweetDimensions = function(tweet) {
             return {
-                "height": tweet.height + "px",
+                "height": tweet.displayHeightPx + "px",
                 "margin-top": tweetMargin + "px",
                 "margin-bottom": tweetMargin + "px",
                 "margin-left": tweetMargin + "px",
