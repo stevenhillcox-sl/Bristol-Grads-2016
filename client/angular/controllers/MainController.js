@@ -65,14 +65,15 @@
         }
 
         function updateInteractions() {
-            var maxTweets = Math.min(99, $scope.tweets.length);
-            var topTweets = $scope.tweets.slice(-maxTweets);
-            var visibleTweets = topTweets.map(function(tweet) {
-                return {
-                    id_str: tweet.id_str,
-                    favorite_count: tweet.favorite_count,
-                    retweet_count: tweet.retweet_count
-                };
+            var visibleTweets = [];
+            $scope.displayColumns.forEach(function(column) {
+                column.forEach(function(tweet) {
+                    visibleTweets.push({
+                        id_str: tweet.id_str,
+                        favorite_count: tweet.favorite_count,
+                        retweet_count: tweet.retweet_count
+                    });
+                });
             });
             twitterWallDataService.updateInteractions(JSON.stringify(visibleTweets)).then(function(results) {
                 if (results) {
