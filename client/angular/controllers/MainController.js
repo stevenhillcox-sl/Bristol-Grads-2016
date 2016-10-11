@@ -19,6 +19,7 @@
             []
         ];
 
+        //defines the space between all tweets on the wall
         var tweetMargin = 12;
 
         $scope.tweets = [];
@@ -78,8 +79,8 @@
             tweetColumnList.forEach(function(tweetColumn, colIdx) {
                 var baseSlotHeight = (($scope.screenHeight - //the total screen height
                         (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
-                        ($scope.screenHeight * (columnDataList[colIdx].extraContentSpacing * 0.01))) / //remove any extra space taken up by extra content
-                    columnDataList[colIdx].slots); //divide the remaining avaliable space between slots
+                        ($scope.screenHeight * (columnDataList[colIdx].extraContentSpacing * 0.01))) / //remove any space taken up by extra content
+                    columnDataList[colIdx].slots); //divide the remaining available space between slots
                 tweetColumn.forEach(function(tweet) {
                     //tweets with pictures have as much room as two normal tweets + the space between them
                     tweet.height = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
