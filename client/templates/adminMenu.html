@@ -1,66 +1,75 @@
-<md-menu-bar>
-    <md-menu>
-        <button ng-click="$mdOpenMenu(); getBlockedUsers()" class="admin-menu-button">
-        BLOCKED USERS
-        </button>
-        <md-menu-content>
-            <md-menu-item class="md-indent admin-menu-item" ng-repeat="user in blockedUsers">
-                <i class="material-icons" style="color: grey; margin-bottom: 5px; width: 40px">person</i>
-                <p style="margin: 0px">{{user.name}} - @{{user.screen_name}}</p>
-                <md-button style="margin: 0px; padding: 0px; width: 40px" ng-click="removeBlockedUser(user)"><i class="material-icons" style="margin-bottom: 5px; width: 40px">clear
-                </i></md-button>
+<div class="admin-menu-container">
+    <div class="admin-menu-side-item">
+        <md-switch ng-model="adminView" aria-label="Admin View Switch">
+            {{adminView ? "Admin view" : "User view"}}
+        </md-switch>
+    </div>
+    <md-menu-bar>
+        <md-menu>
+            <button ng-click="$mdOpenMenu(); getBlockedUsers()" class="admin-menu-button">
+            BLOCKED USERS
+            </button>
+            <md-menu-content>
+                <md-menu-item class="md-indent admin-menu-item" ng-repeat="user in blockedUsers">
+                    <i class="material-icons" style="color: grey; margin-bottom: 5px; width: 40px">person</i>
+                    <p style="margin: 0px">{{user.name}} - @{{user.screen_name}}</p>
+                    <md-button style="margin: 0px; padding: 0px; width: 40px" ng-click="removeBlockedUser(user)">
+                        <i class="material-icons" style="margin-bottom: 5px; width: 40px">clear</i>
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
+            <button ng-click="$mdOpenMenu()" class="admin-menu-button">
+            SPEAKERS
+            </button>
+            <md-menu-content class="admin-menu-item">
+                <md-menu-item class="md-indent admin-menu-item">
+                    <i class="material-icons" style="margin-bottom: 45px; width: 40px">add</i>
+                    <form ng-submit="addSpeaker()">
+                        <md-input-container>
+                            <input ng-model="ctrl.speaker" placeholder="New speaker" autocomplete="off"></input>
+                        </md-input-container>
+                    </form>
+                </md-menu-item>
+            <md-menu-divider></md-menu-divider>
+            <md-menu-item ng-repeat="speaker in speakers" class="md-indent admin-menu-item">
+                <md-button ng-click="removeSpeaker(speaker)" style="width: 0px" class="admin-menu-button md-no-focus">
+                    <i class="material-icons" style="margin-bottom: 15px; width: 0px">clear</i>
+                </md-button>
+                <span style="margin-top: 3px">{{speaker}}</span>
             </md-menu-item>
         </md-menu-content>
     </md-menu>
     <md-menu>
         <button ng-click="$mdOpenMenu()" class="admin-menu-button">
-        SPEAKERS
+        RETWEETS
         </button>
-        <md-menu-content class="admin-menu-item">
-            <md-menu-item class="md-indent admin-menu-item">
-                <i class="material-icons" style="margin-bottom: 45px; width: 40px">add</i>
-                <form ng-submit="addSpeaker()">
-                    <md-input-container>
-                        <input ng-model="ctrl.speaker" placeholder="New speaker" autocomplete="off"></input>
-                    </md-input-container>
-                </form>
+        <md-menu-content>
+            <md-menu-item>
+                <md-button ng-click="setRetweetDisplayStatus('all')">
+                    Show all
+                </md-button>
             </md-menu-item>
-        <md-menu-divider></md-menu-divider>
-        <md-menu-item ng-repeat="speaker in speakers" class="md-indent admin-menu-item">
-            <md-button ng-click="removeSpeaker(speaker)" style="width: 0px" class="admin-menu-button md-no-focus">
-                <i class="material-icons" style="margin-bottom: 15px; width: 0px">clear</i>
-            </md-button>
-            <span style="margin-top: 3px">{{speaker}}</span>
-        </md-menu-item>
-    </md-menu-content>
-</md-menu>
-<md-menu>
-    <button ng-click="$mdOpenMenu()" class="admin-menu-button">
-    RETWEETS
-    </button>
-    <md-menu-content>
-        <md-menu-item>
-            <md-button ng-click="setRetweetDisplayStatus('all')">
-                Show all
-            </md-button>
-        </md-menu-item>
-        <md-menu-item>
-            <md-button ng-click="setRetweetDisplayStatus('none')">
-                Show none
-            </md-button>
-        </md-menu-item>
-         <md-menu-item>
-            <md-button ng-click="setRetweetDisplayStatus('bristech_only')">
-                Show only what @bristech retweets
-            </md-button>
-        </md-menu-item>
-    </md-menu-content>
-</md-menu>
-<md-menu>
-    <button ng-click="logOut()" class="admin-menu-button">
-    LOG OUT
-    </button>
-    <md-menu-content>
-    </md-menu-content>
-</md-menu>
-</md-menu-bar>
+            <md-menu-item>
+                <md-button ng-click="setRetweetDisplayStatus('none')">
+                    Show none
+                </md-button>
+            </md-menu-item>
+             <md-menu-item>
+                <md-button ng-click="setRetweetDisplayStatus('bristech_only')">
+                    Show only what @bristech retweets
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+    <md-menu>
+        <button ng-click="logOut()" class="admin-menu-button">
+        LOG OUT
+        </button>
+        <md-menu-content>
+        </md-menu-content>
+    </md-menu>
+    </md-menu-bar>
+    <div class="admin-menu-side-item"/>
+</div>

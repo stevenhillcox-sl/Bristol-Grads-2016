@@ -63,15 +63,6 @@ html::-webkit-scrollbar {
 	border-bottom: 2px solid black; 
 }
 
-.admin-menu-item {
-	height: 100% !important;
-}
-
-.admin-menu-button {
-	letter-spacing: 3px; 
-	font-weight: 800;
-}
-
 .disabled {
 	opacity: 0.5;
 	transition: 1.5s;
