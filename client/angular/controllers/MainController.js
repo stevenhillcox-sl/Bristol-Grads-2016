@@ -37,12 +37,13 @@
 
         vm.updates = [];
 
-        // Ordering function such that newer tweets precede older tweets
         var shouldBeDisplayed = function(tweet) {
             var display = $scope.loggedIn || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
             console.log(display);
             return display;
         };
+
+        // Ordering function such that newer tweets precede older tweets
         var chronologicalOrdering = function(tweetA, tweetB) {
             return new Date(tweetB.created_at).getTime() - new Date(tweetA.created_at).getTime();
         };
