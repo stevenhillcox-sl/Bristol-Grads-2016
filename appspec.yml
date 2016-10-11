@@ -5,9 +5,9 @@ files:
    destination: /
 hooks:
   Install:
-    - location: /bin/app-setup.sh
+    - location: app-setup.sh
       timeout: 3600
   ApplicationStart:
-    - location: /bin/app-start.sh
+    - location: app-start.sh
       timeout: 3600
 
