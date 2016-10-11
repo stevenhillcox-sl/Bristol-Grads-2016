@@ -38,8 +38,7 @@
         vm.updates = [];
 
         var shouldBeDisplayed = function(tweet) {
-            var display = $scope.loggedIn || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
-            return display;
+            return adminViewEnabled() || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
         };
 
         // Ordering function such that newer tweets precede older tweets
@@ -61,6 +60,10 @@
         $scope.columnDataList = columnDataList;
 
         activate();
+
+        function adminViewEnabled() {
+            return $scope.adminView || false;
+        }
 
         function activate() {
             updateTweets();
@@ -145,7 +148,7 @@
             var assignedColumns = columnAssignmentService.assignColumns(tweets, columnDataList);
             var sortedColumns = columnAssignmentService.sortColumns(assignedColumns, columnDataList);
             var backfilledColumns = columnAssignmentService.backfillColumns(sortedColumns, columnDataList);
-            if (!$scope.loggedIn) {
+            if (!adminViewEnabled()) {
                 $scope.displayColumns = backfilledColumns;
             } else {
                 $scope.displayColumns = sortedColumns;

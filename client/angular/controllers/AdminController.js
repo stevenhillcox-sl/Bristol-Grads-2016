@@ -16,6 +16,7 @@
         var vm = this;
         $scope.speakers = [];
         $scope.loggedIn = false;
+        $scope.adminView = false;
         $scope.ctrl = {};
         $scope.errorMessage = "";
         $scope.blockedUsers = [];
@@ -83,6 +84,7 @@
                     console.log("Could not get list of speakers:" + err);
                 });
                 $scope.loggedIn = true;
+                $scope.adminView = true;
             }).catch(function() {
                 adminDashDataService.getAuthUri().then(function(uri) {
                     if ($routeParams.status === "unauthorised") {
