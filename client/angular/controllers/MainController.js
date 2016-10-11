@@ -8,9 +8,10 @@
         "tweetTextManipulationService",
         "columnAssignmentService",
         "$interval",
+        "$window",
     ];
 
-    function MainController($scope, twitterWallDataService, $sce, tweetTextManipulationService, columnAssignmentService, $interval) {
+    function MainController($scope, twitterWallDataService, $sce, tweetTextManipulationService, columnAssignmentService, $interval, $window) {
         var vm = this;
 
         $scope.displayColumns = [
@@ -68,12 +69,12 @@
                     vm.updates = vm.updates.concat(results.updates);
                     displayTweets($scope.tweets, columnDataList);
                 }
+                setTweetHeights($scope.displayColumns);
             });
-            setTweetHeights($scope.displayColumns);
         }
 
         function setTweetHeights(tweetColumnList) {
-            $scope.screenHeight = window.innerHeight ||
+            $scope.screenHeight = $window.innerHeight ||
                 document.documentElement.clientHeight ||
                 document.body.clientHeight;
             tweetColumnList.forEach(function(tweetColumn, colIdx) {

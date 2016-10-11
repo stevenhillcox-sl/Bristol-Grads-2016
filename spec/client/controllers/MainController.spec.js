@@ -1,5 +1,6 @@
 describe("MainController", function() {
 
+    var $window;
     var $testScope;
     var $q;
     var $interval;
@@ -18,6 +19,8 @@ describe("MainController", function() {
     var entities2;
     var tweet1;
     var tweet2;
+    var sizedTweet1;
+    var sizedTweet2;
     var deletedTweet1;
     var favouritedTweet1;
     var blockedTweet2;
@@ -101,7 +104,33 @@ describe("MainController", function() {
             entities: entities2,
             user: user2,
             favorite_count: 0,
-            retweet_count: 0
+            retweet_count: 0,
+        };
+
+        sizedTweet1 = {
+            id_str: "1",
+            text: "RT Test tweet 1 #hello @bristech",
+            entities: entities1,
+            user: user1,
+            retweeted_status: {
+                id_str: "5",
+                text: "Test tweet 1 #hello @bristech",
+                entities: entities1,
+                user: user2,
+            },
+            favorite_count: 0,
+            retweet_count: 0,
+            displayHeightPx: jasmine.any(Number),
+        };
+
+        sizedTweet2 = {
+            id_str: "2",
+            text: "Test tweet 2 www.google.com",
+            entities: entities2,
+            user: user2,
+            favorite_count: 0,
+            retweet_count: 0,
+            displayHeightPx: jasmine.any(Number),
         };
 
         deletedTweet1 = {
@@ -118,6 +147,7 @@ describe("MainController", function() {
             favorite_count: 0,
             retweet_count: 0,
             deleted: true,
+            displayHeightPx: jasmine.any(Number),
         };
 
         favouritedTweet1 = {
@@ -132,7 +162,8 @@ describe("MainController", function() {
                 user: user2,
             },
             favorite_count: 100,
-            retweet_count: 0
+            retweet_count: 0,
+            displayHeightPx: jasmine.any(Number),
         };
 
         blockedTweet2 = {
@@ -142,7 +173,8 @@ describe("MainController", function() {
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            blocked: true
+            blocked: true,
+            displayHeightPx: jasmine.any(Number),
         };
 
         interactedTweet2 = {
@@ -151,7 +183,8 @@ describe("MainController", function() {
             entities: entities2,
             user: user2,
             favorite_count: 0,
-            retweet_count: 50
+            retweet_count: 50,
+            displayHeightPx: jasmine.any(Number),
         };
 
         pinnedTweet1 = {
@@ -167,7 +200,8 @@ describe("MainController", function() {
             },
             favorite_count: 0,
             retweet_count: 0,
-            pinned: true
+            pinned: true,
+            displayHeightPx: jasmine.any(Number),
         };
 
         speakerTweet2 = {
@@ -177,7 +211,8 @@ describe("MainController", function() {
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            wallPriority: true
+            wallPriority: true,
+            displayHeightPx: jasmine.any(Number),
         };
 
         retweetedTweet1 = {
@@ -193,7 +228,8 @@ describe("MainController", function() {
             },
             favorite_count: 0,
             retweet_count: 0,
-            hide_retweet: true
+            hide_retweet: true,
+            displayHeightPx: jasmine.any(Number),
         };
 
         retweetedTweet2 = {
@@ -203,14 +239,15 @@ describe("MainController", function() {
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            hide_retweet: false
+            hide_retweet: false,
+            displayHeightPx: jasmine.any(Number),
         };
 
         testTweets = [tweet1, tweet2];
-        testDeleteTweets = [deletedTweet1, tweet2];
-        testBlockedTweets = [tweet1, blockedTweet2];
-        testPinnedTweets = [pinnedTweet1, tweet2];
-        testSpeakerTweets = [tweet1, speakerTweet2];
+        testDeleteTweets = [deletedTweet1, sizedTweet2];
+        testBlockedTweets = [sizedTweet1, blockedTweet2];
+        testPinnedTweets = [pinnedTweet1, sizedTweet2];
+        testSpeakerTweets = [sizedTweet1, speakerTweet2];
         testRetweetDisplayTweets = [retweetedTweet1, retweetedTweet2];
         testInteractedTweets = [favouritedTweet1, interactedTweet2];
 
@@ -306,7 +343,9 @@ describe("MainController", function() {
         module("TwitterWallApp");
     });
 
-    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_, _$window_) {
+        $window = _$window_;
+        $window.innerHeight = 500;
         $testScope = _$rootScope_.$new();
         $q = _$q_;
         $interval = _$interval_;
@@ -336,6 +375,12 @@ describe("MainController", function() {
         columnAssignmentService.assignColumns.and.returnValue(testAssignedColumns);
         columnAssignmentService.sortColumns.and.returnValue(testSortedColumns);
         columnAssignmentService.backfillColumns.and.returnValue(testBackfilledColumns);
+        columnAssignmentService.ColumnData.and.callFake(function(slots, selector, ordering, extraContentSpacing) {
+            this.ordering = ordering;
+            this.selector = selector;
+            this.slots = slots;
+            this.extraContentSpacing = extraContentSpacing;
+        });
 
         MainController = _$controller_("MainController", {
             $scope: $testScope,
@@ -343,6 +388,7 @@ describe("MainController", function() {
             tweetTextManipulationService: tweetTextManipulationService,
             columnAssignmentService: columnAssignmentService,
             $interval: $interval,
+            $window: $window,
         });
     }));
 
