@@ -18,8 +18,8 @@
             this.slots = slots;
             this.selector = selector;
             this.ordering = ordering;
-            //variable to keep track of extra content in each column, eg the logo and "get involved" thing
-            //units are vh i.e. a percentage of the column height
+            //variable to keep track of extra content in each column, eg the logo and "get involved" message
+            //units are vh, a percentage of the column height e.g. 0.2 means 20% of the column should be ignored
             this.extraContentSpacing = extraContentSpacing;
         }
 

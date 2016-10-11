@@ -19,7 +19,7 @@
             []
         ];
 
-        var tweetMargin = 10;
+        var tweetMargin = 12;
 
         $scope.tweets = [];
         $scope.tweetColumnList = [];
