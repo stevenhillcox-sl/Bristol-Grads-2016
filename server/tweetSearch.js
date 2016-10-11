@@ -63,7 +63,7 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
         };
         if (apiResources["statuses/lookup"].requestsRemaining > 0) {
             client.get("statuses/lookup", params, function(error, data, response) {
-                if (data) {
+                if (!error) {
                     data.forEach(function(tweet) {
                         var previous = tweets.find(function(inTweet) {
                             return tweet.id_str === inTweet.id_str;

@@ -65,8 +65,8 @@
         }
 
         function updateInteractions() {
-            var maxTweets = Math.max(100, $scope.tweets.length);
-            var topTweets = $scope.tweets.slice(0, maxTweets);
+            var maxTweets = Math.min(99, $scope.tweets.length);
+            var topTweets = $scope.tweets.slice(-maxTweets);
             var visibleTweets = topTweets.map(function(tweet) {
                 return {
                     id_str: tweet.id_str,
