@@ -22,7 +22,7 @@
         var tweetMargin = 12;
 
         $scope.tweets = [];
-        $scope.tweetColumnList = [];
+
         vm.updates = [];
 
         // Ordering function such that newer tweets precede older tweets
@@ -75,16 +75,14 @@
             $scope.screenHeight = window.innerHeight ||
                 document.documentElement.clientHeight ||
                 document.body.clientHeight;
-            $scope.screenWidth = window.innerWidth ||
-                document.documentElement.clientWidth ||
-                document.body.clientWidth;
             tweetColumnList.forEach(function(tweetColumn, colIdx) {
-                var baseHeight = (($scope.screenHeight - //the total screen height
+                var baseSlotHeight = (($scope.screenHeight - //the total screen height
                         (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
                         ($scope.screenHeight * (columnDataList[colIdx].extraContentSpacing * 0.01))) / //remove any extra space taken up by extra content
                     columnDataList[colIdx].slots); //divide the remaining avaliable space between slots
                 tweetColumn.forEach(function(tweet) {
-                    tweet.height = tweet.entities.media !== undefined ? ((baseHeight * 2) + (tweetMargin * 2)) : baseHeight;
+                    //tweets with pictures have as much room as two normal tweets + the space between them
+                    tweet.height = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
                 });
             });
         }
@@ -177,9 +175,6 @@
             return tweets;
         };
 
-        $scope.hasImage = function(tweet) {
-            return tweet.entities.media !== undefined;
-        };
         $scope.getSize = function(text) {
             var size;
             var charCount = text.toString().split("").length;
