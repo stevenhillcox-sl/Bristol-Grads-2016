@@ -14,10 +14,13 @@
         };
 
         // Metadata for an individual tweet column
-        function ColumnData(slots, selector, ordering) {
+        function ColumnData(slots, selector, ordering, extraContentSpacing) {
             this.slots = slots;
             this.selector = selector;
             this.ordering = ordering;
+            //variable to keep track of extra content in each column, eg the logo and "get involved" thing
+            //units are vh i.e. a percentage of the column height
+            this.extraContentSpacing = extraContentSpacing;
         }
 
         function assignColumns(tweets, columnDataList) {
