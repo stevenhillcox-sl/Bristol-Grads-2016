@@ -38,18 +38,23 @@
         vm.updates = [];
 
         // Ordering function such that newer tweets precede older tweets
+        var shouldBeDisplayed = function(tweet) {
+            var display = $scope.loggedIn || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
+            console.log(display);
+            return display;
+        };
         var chronologicalOrdering = function(tweetA, tweetB) {
             return new Date(tweetB.created_at).getTime() - new Date(tweetA.created_at).getTime();
         };
         var columnDataList = [
             new columnAssignmentService.ColumnData(4, function(tweet) {
-                return tweet.pinned === true;
+                return tweet.pinned === true && shouldBeDisplayed(tweet);
             }, chronologicalOrdering, 26),
             new columnAssignmentService.ColumnData(5, function(tweet) {
-                return tweet.wallPriority === true;
+                return tweet.wallPriority === true && shouldBeDisplayed(tweet);
             }, chronologicalOrdering, 0),
             new columnAssignmentService.ColumnData(5, function(tweet) {
-                return true;
+                return shouldBeDisplayed(tweet);
             }, chronologicalOrdering, 0),
         ];
 
@@ -132,7 +137,11 @@
             var assignedColumns = columnAssignmentService.assignColumns(tweets, columnDataList);
             var sortedColumns = columnAssignmentService.sortColumns(assignedColumns, columnDataList);
             var backfilledColumns = columnAssignmentService.backfillColumns(sortedColumns, columnDataList);
-            $scope.displayColumns = backfilledColumns;
+            if (!$scope.loggedIn) {
+                $scope.displayColumns = backfilledColumns;
+            } else {
+                $scope.displayColumns = sortedColumns;
+            }
         }
 
         $scope.setFlagsForTweets = function(tweets, updates) {

@@ -33,7 +33,9 @@
                 var columnIndex = columnDataList.findIndex(function(columnData) {
                     return columnData.selector(tweet);
                 });
-                columnList[columnIndex].push(tweet);
+                if (columnIndex !== -1) {
+                    columnList[columnIndex].push(tweet);
+                }
             });
             return columnList;
         }
