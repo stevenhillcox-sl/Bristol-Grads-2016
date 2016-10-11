@@ -387,10 +387,12 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
             query.since_id = last_id;
         }
         client.get(resource, query, function(error, data, response) {
-            if (data) {
-                apiResources[resource].addData(data);
+            if (!error) {
                 apiResources[resource].requestsRemaining = response.headers["x-rate-limit-remaining"];
                 apiResources[resource].resetTime = (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000;
+                if (data) {
+                    apiResources[resource].addData(data);
+                }
             } else {
                 console.log(error);
             }
