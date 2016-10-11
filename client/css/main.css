@@ -72,10 +72,6 @@ html::-webkit-scrollbar {
 	font-weight: 800;
 }
 
-.md-secondary-container {
-	margin-top: 0px !important;
-}
-
 .disabled {
 	opacity: 0.5;
 	transition: 1.5s;

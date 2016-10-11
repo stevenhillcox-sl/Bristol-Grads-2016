@@ -39,7 +39,6 @@
 
         var shouldBeDisplayed = function(tweet) {
             var display = $scope.loggedIn || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
-            console.log(display);
             return display;
         };
 
