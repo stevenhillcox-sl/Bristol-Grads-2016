@@ -20,12 +20,16 @@
 
             displayText = addHashtag(displayText, displayEntities.hashtags);
             displayText = addMention(displayText, displayEntities.user_mentions);
-            displayText = addDisplayUrls(displayText, displayEntities.urls);
+            if(tweet.retweeted_status){
+                displayText = addUrls(displayText, displayEntities.urls);
+            } else {
+                displayText = addDisplayUrls(displayText, displayEntities.urls);
+            }
 
             if (displayEntities.media) {
                 displayText = deleteMediaLink(displayText, displayEntities.media);
             }
-            
+
             return displayText;
         }
 
