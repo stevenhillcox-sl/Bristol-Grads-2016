@@ -367,7 +367,7 @@ describe("MainController", function() {
             "updateInteractions",
         ]);
         tweetTextManipulationService = jasmine.createSpyObj("tweetTextManipulationService", [
-            "updateTweet",
+            "getDisplayText",
             "addHashtag",
             "addMention",
             "addUrl",
@@ -425,8 +425,8 @@ describe("MainController", function() {
             expect($testScope.tweets).toEqual(testTweets);
         });
         it("uses the tweet text manipulation service to format tweets for display", function() {
-            expect(tweetTextManipulationService.updateTweet).toHaveBeenCalledTimes(testTweets.length);
-            expect(tweetTextManipulationService.updateTweet.calls.allArgs()).toEqual(testTweets.map(function(tweet) {
+            expect(tweetTextManipulationService.getDisplayText).toHaveBeenCalledTimes(testTweets.length);
+            expect(tweetTextManipulationService.getDisplayText.calls.allArgs()).toEqual(testTweets.map(function(tweet) {
                 return [tweet];
             }));
         });

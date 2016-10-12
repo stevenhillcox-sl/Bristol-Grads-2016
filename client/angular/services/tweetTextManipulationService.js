@@ -20,7 +20,7 @@
 
             displayText = addHashtag(displayText, displayEntities.hashtags);
             displayText = addMention(displayText, displayEntities.user_mentions);
-            if(tweet.retweeted_status){
+            if (tweet.retweeted_status) {
                 displayText = addUrls(displayText, displayEntities.urls);
             } else {
                 displayText = addDisplayUrls(displayText, displayEntities.urls);

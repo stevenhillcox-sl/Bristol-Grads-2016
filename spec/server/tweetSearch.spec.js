@@ -426,7 +426,8 @@ describe("tweetSearch", function() {
             var queries = getQueries("search/tweets");
             expect(queries.length).toEqual(1);
             expect(queries[0]).toEqual({
-                q: hashtags.concat(mentions).join(" OR ")
+                q: hashtags.concat(mentions).join(" OR "),
+                tweet_mode: "extended"
             });
         });
 
@@ -444,7 +445,8 @@ describe("tweetSearch", function() {
             var queries = getQueries("statuses/user_timeline");
             expect(queries.length).toEqual(1);
             expect(queries[0]).toEqual({
-                screen_name: officialUsers[0]
+                screen_name: officialUsers[0],
+                tweet_mode: "extended"
             });
         });
 
