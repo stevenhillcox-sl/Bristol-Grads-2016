@@ -122,6 +122,7 @@ describe("MainController", function() {
             favorite_count: 0,
             retweet_count: 0,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         sizedTweet2 = {
@@ -132,6 +133,7 @@ describe("MainController", function() {
             favorite_count: 0,
             retweet_count: 0,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         deletedTweet1 = {
@@ -149,6 +151,7 @@ describe("MainController", function() {
             retweet_count: 0,
             deleted: true,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         favouritedTweet1 = {
@@ -165,6 +168,7 @@ describe("MainController", function() {
             favorite_count: 100,
             retweet_count: 0,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         blockedTweet2 = {
@@ -176,6 +180,7 @@ describe("MainController", function() {
             retweet_count: 0,
             blocked: true,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         interactedTweet2 = {
@@ -186,6 +191,7 @@ describe("MainController", function() {
             favorite_count: 0,
             retweet_count: 50,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         pinnedTweet1 = {
@@ -203,6 +209,7 @@ describe("MainController", function() {
             retweet_count: 0,
             pinned: true,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         speakerTweet2 = {
@@ -214,6 +221,7 @@ describe("MainController", function() {
             retweet_count: 0,
             wallPriority: true,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         retweetedTweet1 = {
@@ -231,6 +239,7 @@ describe("MainController", function() {
             retweet_count: 0,
             hide_retweet: true,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         retweetedTweet2 = {
@@ -242,6 +251,7 @@ describe("MainController", function() {
             retweet_count: 0,
             hide_retweet: false,
             displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         testTweets = [tweet1, tweet2];
@@ -348,6 +358,7 @@ describe("MainController", function() {
         $window = _$window_;
         $document = _$document_;
         $window.innerHeight = 500;
+        $window.innerWidth = 500;
         $testScope = _$rootScope_.$new();
         $q = _$q_;
         $interval = _$interval_;
@@ -537,22 +548,33 @@ describe("MainController", function() {
 
     });
 
-    describe("setTweetHeights", function() {
-        it("should assign a numerical value to the displayHeightPx property of each tweet", function() {
+    describe("setTweetDimensions", function() {
+        beforeEach(function() {
             deferredGetTweetsResponse.resolve(testTweetData);
             $testScope.$apply();
+        });
+
+        it("should assign a numerical value to the displayHeightPx property of each tweet", function() {
             $testScope.tweets.forEach(function(tweet) {
                 expect(tweet.displayHeightPx).toEqual(jasmine.any(Number));
             });
         });
 
+        it("should assign a numerical value to the displayWidthPx property of each tweet", function() {
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayWidthPx).toEqual(jasmine.any(Number));
+            });
+        });
+
         describe("On changed data", function() {
             var initialDisplayHeight;
+            var initialDisplayWidth;
 
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
                 initialDisplayHeight = $testScope.tweets[0].displayHeightPx;
+                initialDisplayWidth = $testScope.tweets[0].displayWidthPx;
                 deferredGetTweetsResponse = $q.defer();
                 twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
                 deferredGetTweetsResponse.resolve({
@@ -569,7 +591,14 @@ describe("MainController", function() {
                 expect($testScope.tweets[0].displayHeightPx).toBeLessThan(initialDisplayHeight);
             });
 
-            it("should assign a smaller displayHeightPx value when the window is smaller", function() {
+            it("should assign a smaller displayWidthPx value when the window is smaller", function() {
+                $window.innerWidth = 400;
+                $interval.flush(500);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayWidthPx).toBeLessThan(initialDisplayWidth);
+            });
+
+            it("shoud assign a larger displayHeightPx when the tweet has an image", function() {
                 $testScope.tweets[0].entities.media = {
                     image: "dog pic",
                 };

@@ -96,7 +96,7 @@
                 $document.documentElement.clientWidth ||
                 $document.body.clientWidth;
 
-            var baseColumnWidth = ($scope.screenWidth - (2* tweetMargin * columnDataList.length)) / columnDataList.length;
+            var baseColumnWidth = ($scope.screenWidth - (2 * tweetMargin * columnDataList.length)) / columnDataList.length;
             displayColumns.forEach(function(tweetColumn, colIdx) {
                 var baseSlotHeight = (($scope.screenHeight - //the total screen height
                         (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
@@ -219,7 +219,7 @@
         $scope.getTweetDimensions = function(tweet) {
             return {
                 "height": tweet.displayHeightPx + "px",
-                "width" : tweet.displayWidthPx + "px",
+                "width": tweet.displayWidthPx + "px",
                 "margin-top": tweetMargin + "px",
                 "margin-bottom": tweetMargin + "px",
                 "margin-left": tweetMargin + "px",
