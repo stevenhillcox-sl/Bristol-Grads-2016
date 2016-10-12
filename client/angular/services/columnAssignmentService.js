@@ -88,8 +88,9 @@
                         filledColumnList[idx].push(tweet);
                         freeSlots[idx] -= weight(tweet);
                         overflow.splice(tweetIndex, 1);
+                    } else {
+                        tweetIndex++;
                     }
-                    tweetIndex++;
                 }
             });
             return filledColumnList;
