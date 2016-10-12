@@ -8,7 +8,7 @@ with open('/home/ec2-user/secret.json') as data_file:
 
 pprint(data)
  
-fp=open("/server.js","r")
+fp=open("server.js","r")
 buffer=fp.read()
 fp.close()
  
@@ -32,6 +32,6 @@ strToSearch="process.env.TWITTER_ACCESS_TOKEN_SECRET"
 strToReplace=data['TWITTER_ACCESS_TOKEN_SECRET']
 buffer = buffer.replace(strToSearch,strToReplace)
 
-fp=open("/server.js","w")
+fp=open("server.js","w")
 fp.write(buffer)
 fp.close()
