@@ -396,7 +396,7 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
                     apiResources[resource].addData(data);
                 }
             } else {
-                if (response.headers["x-rate-limit-remaining"]) {
+                if (response && response.headers && response.headers["x-rate-limit-remaining"]) {
                     apiResources[resource].requestsRemaining = response.headers["x-rate-limit-remaining"];
                     apiResources[resource].resetTime = (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000;
                 } else {
