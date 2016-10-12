@@ -46,6 +46,10 @@
             return adminViewEnabled() || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
         };
 
+        $scope.hiddenTweets = function(tweet) {
+            return !(!((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet));
+        };
+
         // Ordering function such that newer tweets precede older tweets
         var chronologicalOrdering = function(tweetA, tweetB) {
             return new Date(tweetB.created_at).getTime() - new Date(tweetA.created_at).getTime();
@@ -84,7 +88,11 @@
         }
 
         function adminViewEnabled() {
-            return $scope.adminView || false;
+            if ($scope.isMobile) {
+                return false;
+            } else {
+                return $scope.adminView || false;
+            }
         }
 
         function onSizeChanged() {
@@ -105,7 +113,14 @@
                 displayTweets($scope.tweets, columnDataList);
             }
             if (vm.redisplayFlags.size) {
-                setTweetDimensions($scope.displayColumns);
+                if ($scope.isMobile) {
+                    setTweetDimensions([$scope.tweets], [{
+                        slots: 4,
+                        extraContentSpacing: 0
+                    }]);
+                } else {
+                    setTweetDimensions($scope.displayColumns, columnDataList);
+                }
             }
             Object.keys(vm.redisplayFlags).forEach(function(key) {
                 vm.redisplayFlags[key] = false;
@@ -131,7 +146,7 @@
             });
         }
 
-        function setTweetDimensions(displayColumns) {
+        function setTweetDimensions(displayColumns, columnDataList) {
             $scope.screenHeight = $window.innerHeight ||
                 $document.documentElement.clientHeight ||
                 $document.body.clientHeight;
@@ -193,6 +208,10 @@
             } else {
                 $scope.displayColumns = sortedColumns;
             }
+            $scope.onscreenTweets = (backfilledColumns.reduce(function(prevColumn, curColumn) {
+                return prevColumn.concat(curColumn);
+            }));
+            console.log($scope.onscreenTweets);
         }
 
         $scope.setFlagsForTweets = function(tweets, updates) {

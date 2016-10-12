@@ -5,7 +5,7 @@
     </div>
 </md-content>
 <md-content ng-if="loggedIn && isMobile">
-    mobile admin view
+    <ng-include src="'/templates/mobileDash.html'" ng-controller="MainController"></ng-include>
 </md-content>
 <md-content ng-if="!loggedIn" class="login-container">
         <p>{{ errorMessage }}</p>
