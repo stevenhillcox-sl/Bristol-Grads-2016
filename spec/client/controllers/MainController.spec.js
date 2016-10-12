@@ -48,6 +48,7 @@ describe("MainController", function() {
     var testBackfilledColumns;
 
     var testUri;
+    var testTweetDisplayText;
 
     function initValues() {
         testSuccessResponse = {
@@ -86,12 +87,12 @@ describe("MainController", function() {
 
         tweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
@@ -101,7 +102,7 @@ describe("MainController", function() {
 
         tweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
@@ -110,146 +111,157 @@ describe("MainController", function() {
 
         sizedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         sizedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         deletedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
             deleted: true,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         favouritedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 100,
             retweet_count: 0,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         blockedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
             blocked: true,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         interactedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 50,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         pinnedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
             pinned: true,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         speakerTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
             wallPriority: true,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
 
         retweetedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
             hide_retweet: true,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
+
         };
 
         retweetedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
             hide_retweet: false,
+            displayText: jasmine.any(Object),
             displayHeightPx: jasmine.any(Number),
             displayWidthPx: jasmine.any(Number),
         };
@@ -342,6 +354,8 @@ describe("MainController", function() {
         ];
 
         testUri = "http://googleLoginPage.com";
+
+        testTweetDisplayText = "Tweet text displayed on screen";
     }
 
     initValues();
@@ -385,6 +399,7 @@ describe("MainController", function() {
         deferredUpdateInteractionsResponse = $q.defer();
         twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
         twitterWallDataService.updateInteractions.and.returnValue(deferredUpdateInteractionsResponse.promise);
+        tweetTextManipulationService.getDisplayText.and.returnValue(testTweetDisplayText);
         columnAssignmentService.assignColumns.and.returnValue(testAssignedColumns);
         columnAssignmentService.sortColumns.and.returnValue(testSortedColumns);
         columnAssignmentService.backfillColumns.and.returnValue(testBackfilledColumns);
