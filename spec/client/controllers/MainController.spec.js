@@ -419,6 +419,7 @@ describe("MainController", function() {
         beforeEach(function() {
             deferredGetTweetsResponse.resolve(testTweetData);
             $testScope.$apply();
+            $interval.flush(100);
         });
         it("appends new tweets received to the scope", function() {
             expect($testScope.tweets).toEqual(testTweets);
@@ -436,6 +437,7 @@ describe("MainController", function() {
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
+                $interval.flush(100);
             });
 
             it("sets the `latestUpdateTime` property equal to the time of the latest update received", function() {
@@ -454,6 +456,7 @@ describe("MainController", function() {
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
+                $interval.flush(100);
                 deferredGetTweetsResponse = $q.defer();
                 twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
                 $interval.flush(500);
@@ -548,6 +551,46 @@ describe("MainController", function() {
 
     });
 
+    describe("adminView", function() {
+        it("should perform an update when switching between admin and user views", function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(1);
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(1);
+            $testScope.adminView = true;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(2);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(2);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(2);
+            $testScope.adminView = false;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(3);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(3);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(3);
+        });
+
+        it("should display columns without backfilling when using the admin view", function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.adminView = false;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect($testScope.displayColumns).toEqual(testBackfilledColumns);
+            $testScope.adminView = true;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect($testScope.displayColumns).toEqual(testSortedColumns);
+        });
+    });
+
     describe("setTweetDimensions", function() {
         beforeEach(function() {
             deferredGetTweetsResponse.resolve(testTweetData);
@@ -556,11 +599,19 @@ describe("MainController", function() {
 
         it("should assign a numerical value to the displayHeightPx property of each tweet", function() {
             $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayHeightPx).toBeUndefined();
+            });
+            $interval.flush(100);
+            $testScope.tweets.forEach(function(tweet) {
                 expect(tweet.displayHeightPx).toEqual(jasmine.any(Number));
             });
         });
 
         it("should assign a numerical value to the displayWidthPx property of each tweet", function() {
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayWidthPx).toBeUndefined();
+            });
+            $interval.flush(100);
             $testScope.tweets.forEach(function(tweet) {
                 expect(tweet.displayWidthPx).toEqual(jasmine.any(Number));
             });
@@ -573,38 +624,36 @@ describe("MainController", function() {
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
+                $interval.flush(100);
                 initialDisplayHeight = $testScope.tweets[0].displayHeightPx;
                 initialDisplayWidth = $testScope.tweets[0].displayWidthPx;
-                deferredGetTweetsResponse = $q.defer();
-                twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
-                deferredGetTweetsResponse.resolve({
-                    tweets: [],
-                    updates: []
-                });
+                $testScope.adminView = true;
+                $testScope.$apply();
+                $testScope.adminView = false;
                 $testScope.$apply();
             });
 
             it("should assign a smaller displayHeightPx value when the window is smaller", function() {
                 $window.innerHeight = 400;
-                $interval.flush(500);
+                $interval.flush(100);
                 $testScope.$apply();
                 expect($testScope.tweets[0].displayHeightPx).toBeLessThan(initialDisplayHeight);
             });
 
             it("should assign a smaller displayWidthPx value when the window is smaller", function() {
                 $window.innerWidth = 400;
-                $interval.flush(500);
+                $interval.flush(100);
                 $testScope.$apply();
                 expect($testScope.tweets[0].displayWidthPx).toBeLessThan(initialDisplayWidth);
             });
 
-            it("shoud assign a larger displayHeightPx when the tweet has an image", function() {
+            it("should assign at least twice as large a displayHeightPx value when a tweet contains an image", function() {
                 $testScope.tweets[0].entities.media = {
                     image: "dog pic",
                 };
-                $interval.flush(500);
+                $interval.flush(100);
                 $testScope.$apply();
-                expect($testScope.tweets[0].displayHeightPx).toBeGreaterThan(initialDisplayHeight);
+                expect($testScope.tweets[0].displayHeightPx).not.toBeLessThan(initialDisplayHeight * 2);
             });
         });
     });
