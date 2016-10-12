@@ -20,7 +20,7 @@
         </md-card-icon-actions>
     </md-card-header>
     <md-card-content layout="row" layout-padding layout-align="center center" style="flex:1">
-        <div ng-bind-html="tweet.text" ng-style="getSize(tweet.text)"></div>
+        <div ng-bind-html="tweet.displayText" ng-style="getSize(tweet.displayText)"></div>
         <img class="md-media-sm tweet-media" ng-if="tweet.entities.media[0].media_url_https!==undefined" ng-src="{{tweet.entities.media[0].media_url_https}}"/>
     </md-card-content>
     <md-card-footer>

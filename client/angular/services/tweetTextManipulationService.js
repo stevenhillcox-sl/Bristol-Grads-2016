@@ -5,7 +5,7 @@
 
     function tweetTextManipulationService() {
         return {
-            updateTweet: updateTweet,
+            getDisplayText: getDisplayText,
             getUntruncatedText: getUntruncatedText,
             addHashtag: addHashtag,
             addMention: addMention,
@@ -14,31 +14,34 @@
             deleteMediaLink: deleteMediaLink,
         };
 
-        function updateTweet(tweet) {
-            if (tweet.retweeted_status) {
-                tweet.text = getUntruncatedText(tweet);
-                tweet.entities = tweet.retweeted_status.entities;
-                tweet.truncated = tweet.retweeted_status.truncated;
-            }
-            tweet.text = addHashtag(tweet.text, tweet.entities.hashtags);
-            tweet.text = addMention(tweet.text, tweet.entities.user_mentions);
-            if (tweet.truncated) {
-                tweet.text = addUrls(tweet.text, tweet.entities.urls);
-            } else {
-                tweet.text = addDisplayUrls(tweet.text, tweet.entities.urls);
-            }
+        function getDisplayText(tweet) {
+            var displayText = getUntruncatedText(tweet);
+            var displayEntities = getEntities(tweet);
 
-            if (tweet.entities.media) {
-                tweet.text = deleteMediaLink(tweet.text, tweet.entities.media);
+            displayText = addHashtag(displayText, displayEntities.hashtags);
+            displayText = addMention(displayText, displayEntities.user_mentions);
+            displayText = addDisplayUrls(displayText, displayEntities.urls);
+
+            if (displayEntities.media) {
+                displayText = deleteMediaLink(displayText, displayEntities.media);
             }
-            return tweet.text;
+            
+            return displayText;
         }
 
         function getUntruncatedText(tweet) {
             if (tweet.retweeted_status) {
-                return "RT @" + tweet.retweeted_status.user.screen_name + ": " + tweet.retweeted_status.text;
+                return "RT @" + tweet.retweeted_status.user.screen_name + ": " + tweet.retweeted_status.full_text;
             } else {
-                return tweet.text;
+                return tweet.full_text;
+            }
+        }
+
+        function getEntities(tweet) {
+            if (tweet.retweeted_status) {
+                return tweet.retweeted_status.entities;
+            } else {
+                return tweet.entities;
             }
         }
 

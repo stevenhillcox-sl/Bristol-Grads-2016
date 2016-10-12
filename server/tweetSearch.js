@@ -185,10 +185,12 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
 
     loadEventConfig(eventConfigFile, function() {
         var hashtagUpdateFn = tweetResourceGetter("search/tweets", {
-            q: hashtags.concat(mentions).join(" OR ")
+            q: hashtags.concat(mentions).join(" OR "),
+            tweet_mode: "extended"
         });
         var timelineUpdateFn = tweetResourceGetter("statuses/user_timeline", {
-            screen_name: officialUsers[0]
+            screen_name: officialUsers[0],
+            tweet_mode: "extended"
         });
         // Begins the chain of callbacks defined below
         rateCheckLoop();

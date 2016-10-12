@@ -118,7 +118,7 @@
                     var newTweets = [];
                     if (results.tweets.length > 0) {
                         results.tweets.forEach(function(tweet) {
-                            $sce.trustAsHtml(tweetTextManipulationService.updateTweet(tweet));
+                            tweet.displayText = $sce.trustAsHtml(tweetTextManipulationService.getDisplayText(tweet));
                         });
                         newTweets = $scope.setFlagsForTweets(results.tweets, vm.updates);
                     }
