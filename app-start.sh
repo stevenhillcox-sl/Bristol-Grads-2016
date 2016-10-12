@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Starting application"
-node /server.js
+sudo node server.js
 echo "Application started successfully !"
