@@ -7,10 +7,13 @@ hooks:
   Install:
     - location: app-setup.sh
       timeout: 3600
+      runas: root
   AfterInstall:
     - location: app-config.py
       timeout: 3600
+      runas: root
   ApplicationStart:
     - location: app-start.sh
       timeout: 3600
+      runas: root
 
