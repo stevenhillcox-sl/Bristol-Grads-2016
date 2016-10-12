@@ -84,14 +84,19 @@
                     vm.updates = vm.updates.concat(results.updates);
                     displayTweets($scope.tweets, columnDataList);
                 }
-                setTweetHeights($scope.displayColumns);
+                setTweetDimensions($scope.displayColumns);
             });
         }
 
-        function setTweetHeights(displayColumns) {
+        function setTweetDimensions(displayColumns) {
             $scope.screenHeight = $window.innerHeight ||
                 $document.documentElement.clientHeight ||
                 $document.body.clientHeight;
+            $scope.screenWidth = $window.innerWidth ||
+                $document.documentElement.clientWidth ||
+                $document.body.clientWidth;
+
+            var baseColumnWidth = ($scope.screenWidth - (2* tweetMargin * columnDataList.length)) / columnDataList.length;
             displayColumns.forEach(function(tweetColumn, colIdx) {
                 var baseSlotHeight = (($scope.screenHeight - //the total screen height
                         (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
@@ -100,6 +105,7 @@
                 tweetColumn.forEach(function(tweet) {
                     //tweets with pictures have as much room as two normal tweets + the space between them
                     tweet.displayHeightPx = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
+                    tweet.displayWidthPx = baseColumnWidth;
                 });
             });
         }
@@ -213,6 +219,7 @@
         $scope.getTweetDimensions = function(tweet) {
             return {
                 "height": tweet.displayHeightPx + "px",
+                "width" : tweet.displayWidthPx + "px",
                 "margin-top": tweetMargin + "px",
                 "margin-bottom": tweetMargin + "px",
                 "margin-left": tweetMargin + "px",
