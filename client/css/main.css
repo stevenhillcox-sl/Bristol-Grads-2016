@@ -65,12 +65,10 @@ html::-webkit-scrollbar {
 
 .disabled {
 	opacity: 0.5;
-	transition: 1.5s;
 }
 
 .enabled {
 	opacity: 1;
-	transition: 1.5s;
 }
 
 .blocked {
