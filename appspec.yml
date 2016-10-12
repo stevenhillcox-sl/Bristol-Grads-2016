@@ -5,15 +5,15 @@ files:
    destination: /home/ec2-user/TwitterWallApp/
 hooks:
   Install:
-    - location: app-setup.sh
+    - location: apdp-setup.sh
       timeout: 3600
       runas: root
   AfterInstall:
-    - location: app-config.py
+    - location: aprp-config.py
       timeout: 3600
       runas: root
   ApplicationStart:
-    - location: app-start.sh
+    - location: aprp-start.sh
       timeout: 3600
       runas: root
 
