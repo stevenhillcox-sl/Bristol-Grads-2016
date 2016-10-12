@@ -5,8 +5,6 @@ import os
 strToSearch="process.env.TWEET_WALL_OAUTH_SECRET"
 strToReplace=os.environ['TWEET_WALL_OAUTH_SECRET']
 
-echo strToReplace
- 
 fp=open("/server.js","r")
 buffer=fp.read()
 fp.close()
