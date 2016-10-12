@@ -1,4 +1,5 @@
-# update instance
+#!/bin/bash
+
 sudo yum -y update
 
 echo "Installing nodejs to yum"
