@@ -33,7 +33,7 @@ strToReplace=data['TWITTER_ACCESS_TOKEN_SECRET']
 buffer = buffer.replace(strToSearch,strToReplace)
 
 strToSearch="127.0.0.1"
-strToReplace='54.93.175.249'
+strToReplace='52.57.179.165'
 buffer = buffer.replace(strToSearch,strToReplace)
 
 fp=open("/home/ec2-user/TwitterWallApp/server.js","w")
