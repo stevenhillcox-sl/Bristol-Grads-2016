@@ -1,15 +1,15 @@
-<md-content class="admin-container">
-    <ng-include src="'/templates/adminMenu.html'" ng-show="loggedIn"></ng-include>
+<md-content ng-if="loggedIn && !isMobile" class="admin-container">
+    <ng-include src="'/templates/adminMenu.html'"></ng-include>
     <div class="admin-container-inside">
-        <ng-include src="'/templates/clientTweetWall.html'" ng-show="loggedIn" ng-controller="MainController"></ng-include>
-        <div class="container" ng-show="!loggedIn">
-            <div style="text-align: center">
-                <div>In order to access the dash board for this Twitter Wall you must be authorised</div>
-		        <md-button>
-                    {{ errorMessage }}
-                    <a href="{{loginUri}}"><h1 style="color: black; border: 2px solid black; padding: 20px">Log in</h1></a>
-                </md-button>
-            </div>
-        </div>
+        <ng-include src="'/templates/clientTweetWall.html'" ng-controller="MainController"></ng-include>
     </div>
+</md-content>
+<md-content ng-if="loggedIn && isMobile">
+    mobile admin view
+</md-content>
+<md-content ng-if="!loggedIn" class="login-container">
+        <p>{{ errorMessage }}</p>
+        <md-button>
+            <a href="{{loginUri}}"><h1 class="login-button">Log in</h1></a>
+        </md-button>
 </md-content>
