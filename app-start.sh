@@ -1,3 +1,3 @@
 echo "Starting application"
-node /server.js
+sudo grunt runApp
 echo "Application started successfully !"
