@@ -95,6 +95,10 @@
             vm.redisplayFlags.content = true;
         }
 
+        // Calls the necessary functions to redisplay tweets if any relevant data has changed
+        // Called very frequently, but does nothing if no such data changes have occurred - the reason this is done
+        // instead of just calling immediately when something changes is to prevent massive spam from window resize
+        // events
         function redisplayTweets() {
             if (vm.redisplayFlags.content) {
                 vm.redisplayFlags.size = true;
