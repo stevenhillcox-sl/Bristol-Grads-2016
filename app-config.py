@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7.12
+#!/usr/bin/python
 
 import os
  
