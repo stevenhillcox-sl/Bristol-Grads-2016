@@ -27,8 +27,6 @@ fp.close()
 strToSearch="process.env.TWITTER_CONSUMER_SECRET"
 strToReplace=os.environ['TWITTER_CONSUMER_SECRET']
  
-echo strToReplace
- 
 fp=open("/server.js","r")
 buffer=fp.read()
 fp.close()
