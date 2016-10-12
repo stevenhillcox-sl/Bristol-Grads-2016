@@ -7,6 +7,9 @@ hooks:
   Install:
     - location: app-setup.sh
       timeout: 3600
+  AfterInstall:
+    - location: app-config.sh
+      timeout: 3600
   ApplicationStart:
     - location: app-start.sh
       timeout: 3600
