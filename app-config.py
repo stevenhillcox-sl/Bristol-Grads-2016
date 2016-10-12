@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
  
 strToSearch="process.env.TWEET_WALL_OAUTH_SECRET"
