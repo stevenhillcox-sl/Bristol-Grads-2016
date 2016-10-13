@@ -1,35 +1,8 @@
-<div class="container">
-    <tweet-column
-        position="left"
-        tweets="tweets"
-        admin="loggedIn"
-        set-deleted-status="setDeletedStatus(id, status)"
-        add-blocked-user="addBlockedUser(name, screen_name)"
-        set-pinned-status="setPinnedStatus(id, status)"
-        display-blocked-tweet="displayBlockedTweet(id)"
-        toggle-blocked="toggleBlocked(name, screen_name, blocked)"
-        class="column-container"
-    ></tweet-column>
-    <tweet-column
-        position="middle"
-        tweets="tweets"
-        admin="loggedIn"
-        set-deleted-status="setDeletedStatus(id, status)"
-        add-blocked-user="addBlockedUser(name, screen_name)"
-        set-pinned-status="setPinnedStatus(id, status)"
-        display-blocked-tweet="displayBlockedTweet(id)"
-        toggle-blocked="toggleBlocked(name, screen_name, blocked)"
-        class="column-container"
-    ></tweet-column>
-    <tweet-column
-        position="right"
-        tweets="tweets"
-        admin="loggedIn"
-        set-deleted-status="setDeletedStatus(id, status)"
-        add-blocked-user="addBlockedUser(name, screen_name)"
-        set-pinned-status="setPinnedStatus(id, status)"
-        display-blocked-tweet="displayBlockedTweet(id)"
-        toggle-blocked="toggleBlocked(name, screen_name, blocked)"
-        class="column-container"
-    ></tweet-column>
-</div>
+<md-content layout="row" class="container">
+    <ng-include 
+    flex 
+    src="'/templates/tweet-column.html'" 
+    ng-repeat="displayColumn in displayColumns track by $index" 
+    ng-init="colIndex = $index">
+    </ng-include>
+</md-cotent>

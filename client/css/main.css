@@ -3,10 +3,6 @@ html::-webkit-scrollbar {
 }
 
 .container {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: flex-start;
 	background-color: rgb(104, 183, 252);
 	height: 100%;
 }
@@ -44,7 +40,7 @@ html::-webkit-scrollbar {
 	padding: 0;
 	display: flex;
 	flex-direction: row;
-	height: 20vh
+	height: 20vh;
 }
 
 .admin-container {
@@ -57,6 +53,22 @@ html::-webkit-scrollbar {
 	height: 100%;
 }
 
+.login-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(104, 183, 252);
+	width: 100%;
+	height: 100%;
+}
+
+.login-button {
+	color: black;
+	border: 2px solid black;
+	padding: 20px
+}
+
 .admin-container-inside {
 	height:90%; 
 	width: 100%; 
@@ -65,27 +77,12 @@ html::-webkit-scrollbar {
 	border-bottom: 2px solid black; 
 }
 
-.admin-menu-item {
-	height: 100% !important;
-}
-
-.admin-menu-button {
-	letter-spacing: 3px; 
-	font-weight: 800;
-}
-
-.md-secondary-container {
-	margin-top: 0px !important;
-}
-
 .disabled {
 	opacity: 0.5;
-	transition: 1.5s;
 }
 
 .enabled {
 	opacity: 1;
-	transition: 1.5s;
 }
 
 .blocked {
@@ -121,8 +118,9 @@ html::-webkit-scrollbar {
 }
 
 .tweet-media { 
-	max-height: 500px;
-	object-fit: cover;
+	max-height: 100%;
+	max-width: 60%;
+	object-fit: contain;
 }
 
 b {
@@ -137,3 +135,20 @@ b {
 .retweet-icon {
 	color:#19CF86
 }
+
+.tweet-container {
+	border-radius : 10px;
+}
+
+.tabs-wrapper {
+    position: relative;
+	height: 100%
+}
+.full-size {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+

@@ -1,0 +1,32 @@
+<md-tabs class="full-size" md-stretch-tabs="always" md-selected="ctrl.selectedTab">
+    <md-tab label="on screen">
+        <div layout="column" layout-align="center center">
+		    <ng-include
+                flex
+                src="'/templates/tweet.html'"
+                ng-repeat="tweet in onscreenTweets"
+                ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+                ></ng-include>
+	    </div>
+    </md-tab>
+    <md-tab label="hidden">
+        <div layout="column" layout-align="center center">
+		    <ng-include
+                flex
+                src="'/templates/tweet.html'"
+                ng-repeat="tweet in tweets | filter:hiddenTweets"
+                ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+                ></ng-include>
+	    </div>
+    </md-tab>
+    <md-tab label="all">
+        <div layout="column" layout-align="center center">
+		    <ng-include
+                flex
+                src="'/templates/tweet.html'"
+                ng-repeat="tweet in tweets"
+                ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+                ></ng-include>
+	    </div>
+    </md-tab>
+</md-tabs>

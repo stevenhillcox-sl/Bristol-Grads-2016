@@ -1,0 +1,16 @@
+<div layout="column">
+	<div class=logo-container ng-if="$index===0">
+		<img src="../assets/Bristech-Logo.png" class="logo" />
+		<div class="message" flex>
+			Get involved: tweet with #bristech2016
+		</div>
+	</div>
+	<div layout="column" layout-align="center center">
+		<ng-include
+		flex
+		src="'/templates/tweet.html'"
+		ng-repeat="tweet in displayColumn"
+		ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}"
+		></ng-include>
+	</div>
+</div>

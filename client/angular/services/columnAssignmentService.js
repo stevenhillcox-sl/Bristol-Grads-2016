@@ -14,10 +14,13 @@
         };
 
         // Metadata for an individual tweet column
-        function ColumnData(slots, selector, ordering) {
+        function ColumnData(slots, selector, ordering, extraContentSpacing) {
             this.slots = slots;
             this.selector = selector;
             this.ordering = ordering;
+            //variable to keep track of extra content in each column, eg the logo and "get involved" message
+            //units are vh, a percentage of the column height e.g. 0.2 means 20% of the column space should be ignored
+            this.extraContentSpacing = extraContentSpacing;
         }
 
         function assignColumns(tweets, columnDataList) {
@@ -30,7 +33,9 @@
                 var columnIndex = columnDataList.findIndex(function(columnData) {
                     return columnData.selector(tweet);
                 });
-                columnList[columnIndex].push(tweet);
+                if (columnIndex !== -1) {
+                    columnList[columnIndex].push(tweet);
+                }
             });
             return columnList;
         }
@@ -83,8 +88,9 @@
                         filledColumnList[idx].push(tweet);
                         freeSlots[idx] -= weight(tweet);
                         overflow.splice(tweetIndex, 1);
+                    } else {
+                        tweetIndex++;
                     }
-                    tweetIndex++;
                 }
             });
             return filledColumnList;

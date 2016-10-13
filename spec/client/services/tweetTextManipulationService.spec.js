@@ -9,7 +9,7 @@ describe("tweetTextManipulationService", function() {
     });
 
     var truncatedTestTweet = {
-        text: "Test tweet 1...",
+        full_text: "Test tweet 1...",
         entities: {
             hashtags: [{
                 text: "hello"
@@ -24,7 +24,7 @@ describe("tweetTextManipulationService", function() {
             screen_name: "user1"
         },
         retweeted_status: {
-            text: "untruncated Test tweet 1",
+            full_text: "untruncated Test tweet 1",
             user: {
                 name: "Original Tweeter",
                 screen_name: "original_tweeter"

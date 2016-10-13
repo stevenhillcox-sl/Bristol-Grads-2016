@@ -1,5 +1,7 @@
 describe("MainController", function() {
 
+    var $window;
+    var $document;
     var $testScope;
     var $q;
     var $interval;
@@ -18,6 +20,8 @@ describe("MainController", function() {
     var entities2;
     var tweet1;
     var tweet2;
+    var sizedTweet1;
+    var sizedTweet2;
     var deletedTweet1;
     var favouritedTweet1;
     var blockedTweet2;
@@ -44,6 +48,7 @@ describe("MainController", function() {
     var testBackfilledColumns;
 
     var testUri;
+    var testTweetDisplayText;
 
     function initValues() {
         testSuccessResponse = {
@@ -82,12 +87,12 @@ describe("MainController", function() {
 
         tweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
@@ -97,120 +102,175 @@ describe("MainController", function() {
 
         tweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
-            retweet_count: 0
+            retweet_count: 0,
         };
 
-        deletedTweet1 = {
+        sizedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
+                entities: entities1,
+                user: user2,
+            },
+            favorite_count: 0,
+            retweet_count: 0,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
+        };
+
+        sizedTweet2 = {
+            id_str: "2",
+            full_text: "Test tweet 2 www.google.com",
+            entities: entities2,
+            user: user2,
+            favorite_count: 0,
+            retweet_count: 0,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
+        };
+
+        deletedTweet1 = {
+            id_str: "1",
+            full_text: "RT Test tweet 1 #hello @bristech",
+            entities: entities1,
+            user: user1,
+            retweeted_status: {
+                id_str: "5",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
             deleted: true,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         favouritedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 100,
-            retweet_count: 0
+            retweet_count: 0,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         blockedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            blocked: true
+            blocked: true,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         interactedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
-            retweet_count: 50
+            retweet_count: 50,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         pinnedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
-            pinned: true
+            pinned: true,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         speakerTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            wallPriority: true
+            wallPriority: true,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         retweetedTweet1 = {
             id_str: "1",
-            text: "RT Test tweet 1 #hello @bristech",
+            full_text: "RT Test tweet 1 #hello @bristech",
             entities: entities1,
             user: user1,
             retweeted_status: {
                 id_str: "5",
-                text: "Test tweet 1 #hello @bristech",
+                full_text: "Test tweet 1 #hello @bristech",
                 entities: entities1,
                 user: user2,
             },
             favorite_count: 0,
             retweet_count: 0,
-            hide_retweet: true
+            hide_retweet: true,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
+
         };
 
         retweetedTweet2 = {
             id_str: "2",
-            text: "Test tweet 2 www.google.com",
+            full_text: "Test tweet 2 www.google.com",
             entities: entities2,
             user: user2,
             favorite_count: 0,
             retweet_count: 0,
-            hide_retweet: false
+            hide_retweet: false,
+            displayText: jasmine.any(Object),
+            displayHeightPx: jasmine.any(Number),
+            displayWidthPx: jasmine.any(Number),
         };
 
         testTweets = [tweet1, tweet2];
-        testDeleteTweets = [deletedTweet1, tweet2];
-        testBlockedTweets = [tweet1, blockedTweet2];
-        testPinnedTweets = [pinnedTweet1, tweet2];
-        testSpeakerTweets = [tweet1, speakerTweet2];
+        testDeleteTweets = [deletedTweet1, sizedTweet2];
+        testBlockedTweets = [sizedTweet1, blockedTweet2];
+        testPinnedTweets = [pinnedTweet1, sizedTweet2];
+        testSpeakerTweets = [sizedTweet1, speakerTweet2];
         testRetweetDisplayTweets = [retweetedTweet1, retweetedTweet2];
         testInteractedTweets = [favouritedTweet1, interactedTweet2];
 
@@ -294,6 +354,8 @@ describe("MainController", function() {
         ];
 
         testUri = "http://googleLoginPage.com";
+
+        testTweetDisplayText = "Tweet text displayed on screen";
     }
 
     initValues();
@@ -306,7 +368,11 @@ describe("MainController", function() {
         module("TwitterWallApp");
     });
 
-    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$interval_, _$window_, _$document_) {
+        $window = _$window_;
+        $document = _$document_;
+        $window.innerHeight = 500;
+        $window.innerWidth = 500;
         $testScope = _$rootScope_.$new();
         $q = _$q_;
         $interval = _$interval_;
@@ -315,7 +381,7 @@ describe("MainController", function() {
             "updateInteractions",
         ]);
         tweetTextManipulationService = jasmine.createSpyObj("tweetTextManipulationService", [
-            "updateTweet",
+            "getDisplayText",
             "addHashtag",
             "addMention",
             "addUrl",
@@ -333,9 +399,16 @@ describe("MainController", function() {
         deferredUpdateInteractionsResponse = $q.defer();
         twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
         twitterWallDataService.updateInteractions.and.returnValue(deferredUpdateInteractionsResponse.promise);
+        tweetTextManipulationService.getDisplayText.and.returnValue(testTweetDisplayText);
         columnAssignmentService.assignColumns.and.returnValue(testAssignedColumns);
         columnAssignmentService.sortColumns.and.returnValue(testSortedColumns);
         columnAssignmentService.backfillColumns.and.returnValue(testBackfilledColumns);
+        columnAssignmentService.ColumnData.and.callFake(function(slots, selector, ordering, extraContentSpacing) {
+            this.ordering = ordering;
+            this.selector = selector;
+            this.slots = slots;
+            this.extraContentSpacing = extraContentSpacing;
+        });
 
         MainController = _$controller_("MainController", {
             $scope: $testScope,
@@ -343,6 +416,8 @@ describe("MainController", function() {
             tweetTextManipulationService: tweetTextManipulationService,
             columnAssignmentService: columnAssignmentService,
             $interval: $interval,
+            $window: $window,
+            $document: $document,
         });
     }));
 
@@ -359,13 +434,14 @@ describe("MainController", function() {
         beforeEach(function() {
             deferredGetTweetsResponse.resolve(testTweetData);
             $testScope.$apply();
+            $interval.flush(100);
         });
         it("appends new tweets received to the scope", function() {
             expect($testScope.tweets).toEqual(testTweets);
         });
         it("uses the tweet text manipulation service to format tweets for display", function() {
-            expect(tweetTextManipulationService.updateTweet).toHaveBeenCalledTimes(testTweets.length);
-            expect(tweetTextManipulationService.updateTweet.calls.allArgs()).toEqual(testTweets.map(function(tweet) {
+            expect(tweetTextManipulationService.getDisplayText).toHaveBeenCalledTimes(testTweets.length);
+            expect(tweetTextManipulationService.getDisplayText.calls.allArgs()).toEqual(testTweets.map(function(tweet) {
                 return [tweet];
             }));
         });
@@ -376,6 +452,7 @@ describe("MainController", function() {
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
+                $interval.flush(100);
             });
 
             it("sets the `latestUpdateTime` property equal to the time of the latest update received", function() {
@@ -394,6 +471,7 @@ describe("MainController", function() {
             beforeEach(function() {
                 deferredGetTweetsResponse.resolve(testTweetData);
                 $testScope.$apply();
+                $interval.flush(100);
                 deferredGetTweetsResponse = $q.defer();
                 twitterWallDataService.getTweets.and.returnValue(deferredGetTweetsResponse.promise);
                 $interval.flush(500);
@@ -486,5 +564,112 @@ describe("MainController", function() {
             expect($testScope.tweets).toEqual(testInteractedTweets);
         });
 
+    });
+
+    describe("adminView", function() {
+        it("should perform an update when switching between admin and user views", function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(1);
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(1);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(1);
+            $testScope.adminView = true;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(2);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(2);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(2);
+            $testScope.adminView = false;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect(columnAssignmentService.assignColumns).toHaveBeenCalledTimes(3);
+            expect(columnAssignmentService.sortColumns).toHaveBeenCalledTimes(3);
+            expect(columnAssignmentService.backfillColumns).toHaveBeenCalledTimes(3);
+        });
+
+        it("should display columns without backfilling when using the admin view", function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.adminView = false;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect($testScope.displayColumns).toEqual(testBackfilledColumns);
+            $testScope.adminView = true;
+            $testScope.$apply();
+            $interval.flush(100);
+            expect($testScope.displayColumns).toEqual(testSortedColumns);
+        });
+    });
+
+    describe("setTweetDimensions", function() {
+        beforeEach(function() {
+            deferredGetTweetsResponse.resolve(testTweetData);
+            $testScope.$apply();
+        });
+
+        it("should assign a numerical value to the displayHeightPx property of each tweet", function() {
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayHeightPx).toBeUndefined();
+            });
+            $interval.flush(100);
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayHeightPx).toEqual(jasmine.any(Number));
+            });
+        });
+
+        it("should assign a numerical value to the displayWidthPx property of each tweet", function() {
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayWidthPx).toBeUndefined();
+            });
+            $interval.flush(100);
+            $testScope.tweets.forEach(function(tweet) {
+                expect(tweet.displayWidthPx).toEqual(jasmine.any(Number));
+            });
+        });
+
+        describe("On changed data", function() {
+            var initialDisplayHeight;
+            var initialDisplayWidth;
+
+            beforeEach(function() {
+                deferredGetTweetsResponse.resolve(testTweetData);
+                $testScope.$apply();
+                $interval.flush(100);
+                initialDisplayHeight = $testScope.tweets[0].displayHeightPx;
+                initialDisplayWidth = $testScope.tweets[0].displayWidthPx;
+                $testScope.adminView = true;
+                $testScope.$apply();
+                $testScope.adminView = false;
+                $testScope.$apply();
+            });
+
+            it("should assign a smaller displayHeightPx value when the window is smaller", function() {
+                $window.innerHeight = 400;
+                $interval.flush(100);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayHeightPx).toBeLessThan(initialDisplayHeight);
+            });
+
+            it("should assign a smaller displayWidthPx value when the window is smaller", function() {
+                $window.innerWidth = 400;
+                $interval.flush(100);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayWidthPx).toBeLessThan(initialDisplayWidth);
+            });
+
+            it("should assign at least twice as large a displayHeightPx value when a tweet contains an image", function() {
+                $testScope.tweets[0].entities.media = {
+                    image: "dog pic",
+                };
+                $interval.flush(100);
+                $testScope.$apply();
+                expect($testScope.tweets[0].displayHeightPx).not.toBeLessThan(initialDisplayHeight * 2);
+            });
+        });
     });
 });

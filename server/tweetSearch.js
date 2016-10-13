@@ -63,7 +63,7 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
         };
         if (apiResources["statuses/lookup"].requestsRemaining > 0) {
             client.get("statuses/lookup", params, function(error, data, response) {
-                if (data) {
+                if (!error) {
                     data.forEach(function(tweet) {
                         var previous = tweets.find(function(inTweet) {
                             return tweet.id_str === inTweet.id_str;
@@ -185,10 +185,12 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
 
     loadEventConfig(eventConfigFile, function() {
         var hashtagUpdateFn = tweetResourceGetter("search/tweets", {
-            q: hashtags.concat(mentions).join(" OR ")
+            q: hashtags.concat(mentions).join(" OR "),
+            tweet_mode: "extended"
         });
         var timelineUpdateFn = tweetResourceGetter("statuses/user_timeline", {
-            screen_name: officialUsers[0]
+            screen_name: officialUsers[0],
+            tweet_mode: "extended"
         });
         // Begins the chain of callbacks defined below
         rateCheckLoop();
@@ -387,11 +389,19 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
             query.since_id = last_id;
         }
         client.get(resource, query, function(error, data, response) {
-            if (data) {
-                apiResources[resource].addData(data);
+            if (!error) {
                 apiResources[resource].requestsRemaining = response.headers["x-rate-limit-remaining"];
                 apiResources[resource].resetTime = (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000;
+                if (data) {
+                    apiResources[resource].addData(data);
+                }
             } else {
+                if (response && response.headers && response.headers["x-rate-limit-remaining"]) {
+                    apiResources[resource].requestsRemaining = response.headers["x-rate-limit-remaining"];
+                    apiResources[resource].resetTime = (Number(response.headers["x-rate-limit-reset"]) + 1) * 1000;
+                } else {
+                    apiResources[resource].requestsRemaining -= 1;
+                }
                 console.log(error);
             }
         });

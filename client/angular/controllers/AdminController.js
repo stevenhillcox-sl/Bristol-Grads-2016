@@ -16,9 +16,12 @@
         var vm = this;
         $scope.speakers = [];
         $scope.loggedIn = false;
+        $scope.adminView = false;
         $scope.ctrl = {};
-        $scope.errorMessage = "";
+        $scope.errorMessage = "In order to access the dash board for this Twitter Wall you must be authorised";
         $scope.blockedUsers = [];
+
+        $scope.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         $scope.setDeletedStatus = adminDashDataService.setDeletedStatus;
         $scope.setPinnedStatus = adminDashDataService.setPinnedStatus;
@@ -83,6 +86,7 @@
                     console.log("Could not get list of speakers:" + err);
                 });
                 $scope.loggedIn = true;
+                $scope.adminView = true;
             }).catch(function() {
                 adminDashDataService.getAuthUri().then(function(uri) {
                     if ($routeParams.status === "unauthorised") {

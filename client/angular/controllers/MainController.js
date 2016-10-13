@@ -8,9 +8,20 @@
         "tweetTextManipulationService",
         "columnAssignmentService",
         "$interval",
+        "$window",
+        "$document",
     ];
 
-    function MainController($scope, twitterWallDataService, $sce, tweetTextManipulationService, columnAssignmentService, $interval) {
+    function MainController(
+        $scope,
+        twitterWallDataService,
+        $sce,
+        tweetTextManipulationService,
+        columnAssignmentService,
+        $interval,
+        $window,
+        $document
+    ) {
         var vm = this;
 
         $scope.displayColumns = [
@@ -18,31 +29,102 @@
             [],
             []
         ];
+
+        //defines the space between all tweets on the wall
+        var tweetMargin = 12;
+
         $scope.tweets = [];
+
         vm.updates = [];
+
+        vm.redisplayFlags = {
+            content: false,
+            size: false,
+        };
+
+        var shouldBeDisplayed = function(tweet) {
+            return adminViewEnabled() || !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
+        };
+
+        $scope.hiddenTweets = function(tweet) {
+            return !(!((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet));
+        };
 
         // Ordering function such that newer tweets precede older tweets
         var chronologicalOrdering = function(tweetA, tweetB) {
             return new Date(tweetB.created_at).getTime() - new Date(tweetA.created_at).getTime();
         };
         var columnDataList = [
+            new columnAssignmentService.ColumnData(4, function(tweet) {
+                return tweet.pinned === true && shouldBeDisplayed(tweet);
+            }, chronologicalOrdering, 26),
             new columnAssignmentService.ColumnData(5, function(tweet) {
-                return tweet.pinned === true;
-            }, chronologicalOrdering),
-            new columnAssignmentService.ColumnData(6, function(tweet) {
-                return tweet.wallPriority === true;
-            }, chronologicalOrdering),
-            new columnAssignmentService.ColumnData(6, function(tweet) {
-                return true;
-            }, chronologicalOrdering),
+                return tweet.wallPriority === true && shouldBeDisplayed(tweet);
+            }, chronologicalOrdering, 0),
+            new columnAssignmentService.ColumnData(5, function(tweet) {
+                return shouldBeDisplayed(tweet);
+            }, chronologicalOrdering, 0),
         ];
+
+        $scope.columnDataList = columnDataList;
+
+        $scope.adminViewEnabled = adminViewEnabled;
 
         activate();
 
         function activate() {
+            // Set up listeners
+            angular.element($window).on("resize", onSizeChanged);
+            var adminViewWatcher = $scope.$watch(adminViewEnabled, onContentChanged);
+            $scope.$on("$destroy", function() {
+                angular.element($window).off("resize", onSizeChanged);
+                adminViewWatcher();
+            });
+            // Begin update loop
             updateTweets();
             $interval(updateTweets, 500);
+            $interval(redisplayTweets, 100);
             $interval(updateInteractions, 5000);
+        }
+
+        function adminViewEnabled() {
+            if ($scope.isMobile) {
+                return false;
+            } else {
+                return $scope.adminView || false;
+            }
+        }
+
+        function onSizeChanged() {
+            vm.redisplayFlags.size = true;
+        }
+
+        function onContentChanged() {
+            vm.redisplayFlags.content = true;
+        }
+
+        // Calls the necessary functions to redisplay tweets if any relevant data has changed
+        // Called very frequently, but does nothing if no such data changes have occurred - the reason this is done
+        // instead of just calling immediately when something changes is to prevent massive spam from window resize
+        // events
+        function redisplayTweets() {
+            if (vm.redisplayFlags.content) {
+                vm.redisplayFlags.size = true;
+                displayTweets($scope.tweets, columnDataList);
+            }
+            if (vm.redisplayFlags.size) {
+                if ($scope.isMobile) {
+                    setTweetDimensions([$scope.tweets], [{
+                        slots: 4,
+                        extraContentSpacing: 0
+                    }]);
+                } else {
+                    setTweetDimensions($scope.displayColumns, columnDataList);
+                }
+            }
+            Object.keys(vm.redisplayFlags).forEach(function(key) {
+                vm.redisplayFlags[key] = false;
+            });
         }
 
         function updateTweets() {
@@ -51,7 +133,7 @@
                     var newTweets = [];
                     if (results.tweets.length > 0) {
                         results.tweets.forEach(function(tweet) {
-                            $sce.trustAsHtml(tweetTextManipulationService.updateTweet(tweet));
+                            tweet.displayText = $sce.trustAsHtml(tweetTextManipulationService.getDisplayText(tweet));
                         });
                         newTweets = $scope.setFlagsForTweets(results.tweets, vm.updates);
                     }
@@ -59,20 +141,45 @@
                     vm.latestUpdateTime = results.updates[results.updates.length - 1].since;
                     $scope.tweets = $scope.setFlagsForTweets($scope.tweets, results.updates);
                     vm.updates = vm.updates.concat(results.updates);
-                    displayTweets($scope.tweets, columnDataList);
+                    onContentChanged();
                 }
             });
         }
 
+        function setTweetDimensions(displayColumns, columnDataList) {
+            $scope.screenHeight = $window.innerHeight ||
+                $document.documentElement.clientHeight ||
+                $document.body.clientHeight;
+            $scope.screenWidth = $window.innerWidth ||
+                $document.documentElement.clientWidth ||
+                $document.body.clientWidth;
+
+            var baseColumnWidth = ($scope.screenWidth - //total screen width
+                    (2 * tweetMargin * columnDataList.length)) / //remove total size of margins between columns
+                columnDataList.length; //divide remaining space between columns
+            displayColumns.forEach(function(tweetColumn, colIdx) {
+                var baseSlotHeight = (($scope.screenHeight - //the total screen height
+                        (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
+                        ($scope.screenHeight * (columnDataList[colIdx].extraContentSpacing * 0.01))) / //remove any space taken up by extra content
+                    columnDataList[colIdx].slots); //divide the remaining available space between slots
+                tweetColumn.forEach(function(tweet) {
+                    //tweets with pictures have as much room as two normal tweets + the space between them
+                    tweet.displayHeightPx = tweet.entities.media !== undefined ? ((baseSlotHeight * 2) + (tweetMargin * 2)) : baseSlotHeight;
+                    tweet.displayWidthPx = baseColumnWidth;
+                });
+            });
+        }
+
         function updateInteractions() {
-            var maxTweets = Math.max(100, $scope.tweets.length);
-            var topTweets = $scope.tweets.slice(0, maxTweets);
-            var visibleTweets = topTweets.map(function(tweet) {
-                return {
-                    id_str: tweet.id_str,
-                    favorite_count: tweet.favorite_count,
-                    retweet_count: tweet.retweet_count
-                };
+            var visibleTweets = [];
+            $scope.displayColumns.forEach(function(column) {
+                column.forEach(function(tweet) {
+                    visibleTweets.push({
+                        id_str: tweet.id_str,
+                        favorite_count: tweet.favorite_count,
+                        retweet_count: tweet.retweet_count
+                    });
+                });
             });
             twitterWallDataService.updateInteractions(JSON.stringify(visibleTweets)).then(function(results) {
                 if (results) {
@@ -96,7 +203,14 @@
             var assignedColumns = columnAssignmentService.assignColumns(tweets, columnDataList);
             var sortedColumns = columnAssignmentService.sortColumns(assignedColumns, columnDataList);
             var backfilledColumns = columnAssignmentService.backfillColumns(sortedColumns, columnDataList);
-            $scope.displayColumns = backfilledColumns;
+            if (!adminViewEnabled()) {
+                $scope.displayColumns = backfilledColumns;
+            } else {
+                $scope.displayColumns = sortedColumns;
+            }
+            $scope.onscreenTweets = (backfilledColumns.reduce(function(prevColumn, curColumn) {
+                return prevColumn.concat(curColumn);
+            }));
         }
 
         $scope.setFlagsForTweets = function(tweets, updates) {
@@ -149,6 +263,31 @@
                 }
             });
             return tweets;
+        };
+
+        $scope.getSize = function(text) {
+            var size;
+            var charCount = text.toString().split("").length;
+            if (charCount < 85) {
+                size = "x-large";
+            } else if (charCount < 120) {
+                size = "large";
+            } else {
+                size = "medium";
+            }
+            return {
+                "font-size": size
+            };
+        };
+        $scope.getTweetDimensions = function(tweet) {
+            return {
+                "height": tweet.displayHeightPx + "px",
+                "width": tweet.displayWidthPx + "px",
+                "margin-top": tweetMargin + "px",
+                "margin-bottom": tweetMargin + "px",
+                "margin-left": tweetMargin + "px",
+                "margin-right": tweetMargin + "px"
+            };
         };
 
         if (!Array.prototype.find) {

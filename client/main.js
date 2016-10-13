@@ -9,3 +9,4 @@ require("./angular/services/columnAssignmentService.js");
 require("./angular/directives/tweetColumn.directive.js");
 
 require("./css/main.css");
+require("./css/adminMenu.css");
