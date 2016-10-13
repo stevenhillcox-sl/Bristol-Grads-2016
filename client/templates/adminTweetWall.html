@@ -4,9 +4,9 @@
         <ng-include src="'/templates/clientTweetWall.html'" ng-controller="MainController"></ng-include>
     </div>
 </md-content>
-<md-content ng-if="loggedIn && isMobile">
+<div ng-if="loggedIn && isMobile" flex class="tabs-wrapper" >
     <ng-include src="'/templates/mobileDash.html'" ng-controller="MainController"></ng-include>
-</md-content>
+</div>
 <md-content ng-if="!loggedIn" class="login-container">
         <p>{{ errorMessage }}</p>
         <md-button>
