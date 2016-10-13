@@ -7,6 +7,25 @@ html::-webkit-scrollbar {
 	height: 100%;
 }
 
+.column-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	overflow-y: auto;
+	width: 33%;
+}
+
+.banner-container {
+	width: 91%; 
+	margin: 30px; 
+	background-color: black;
+}
+
+.banner {
+	width: 100%;
+}
+
 .logo {
 	width: 20vh;
 }

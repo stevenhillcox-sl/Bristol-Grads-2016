@@ -1,6 +1,19 @@
 version: 0.0
-os: windows
+os: linux
 files:
-  source: ./
-  destination: c:/webApps/twitterWallApp
+ - source: /
+   destination: /home/ec2-user/TwitterWallApp/
+hooks:
+  Install:
+    - location: app-setup.sh
+      timeout: 3600
+      runas: root
+  AfterInstall:
+    - location: app-config.py
+      timeout: 3600
+      runas: root
+  ApplicationStart:
+    - location: app-start.sh
+      timeout: 3600
+      runas: root
 
