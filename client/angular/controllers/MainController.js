@@ -211,7 +211,6 @@
             $scope.onscreenTweets = (backfilledColumns.reduce(function(prevColumn, curColumn) {
                 return prevColumn.concat(curColumn);
             }));
-            console.log($scope.onscreenTweets);
         }
 
         $scope.setFlagsForTweets = function(tweets, updates) {
