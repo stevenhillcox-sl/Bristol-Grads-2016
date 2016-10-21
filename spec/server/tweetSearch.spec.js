@@ -73,32 +73,6 @@ var testTimeline2 = [{
     },
 }];
 
-var testTimeline3 = [{
-    id: 8,
-    id_str: "8",
-    text: "Test tweet 8",
-    user: {
-        screen_name: officialUser,
-    },
-    entities: {
-        hashtags: [],
-        user_mentions: [],
-    },
-}];
-
-var testTimeline4 = [{
-    id: 9,
-    id_str: "9",
-    text: "Test tweet 9",
-    user: {
-        screen_name: "joe",
-    },
-    entities: {
-        hashtags: [],
-        user_mentions: [],
-    },
-}];
-
 var testTweets = {
     statuses: [{
         id: 1,
@@ -706,61 +680,6 @@ describe("tweetSearch", function() {
 
             it("still returns the full list of tweets", function() {
                 expect(tweetSearcher.getTweetData().tweets).toEqual(hidingImagesData.tweets);
-            });
-        });
-
-        describe("in approval mode", function() {
-            var approvalTweetData;
-            var thirdUpdateTime;
-            var fourthUpdateTime;
-
-            beforeEach(function() {
-                approvalTweetData = {
-                    tweets: testTweetData.tweets.slice(),
-                    updates: testTweetData.updates.slice(),
-                };
-                jasmine.clock().tick(500);
-                tweetSearcher.setApprovalMode(true);
-                jasmine.clock().tick(5000);
-                tweetSearcher.loadTweets(testTimeline3, "official");
-                approvalTweetData.tweets = approvalTweetData.tweets.concat(testTimeline3);
-                thirdUpdateTime = new Date();
-                approvalTweetData.updates.push({
-                    type: "new_tweets",
-                    since: thirdUpdateTime,
-                    tag: "official",
-                    startIdx: 4,
-                });
-                jasmine.clock().tick(5000);
-                tweetSearcher.loadTweets(testTimeline4, "tagged");
-                approvalTweetData.tweets = approvalTweetData.tweets.concat(testTimeline4);
-                fourthUpdateTime = new Date();
-                approvalTweetData.updates.push({
-                    type: "tweet_status",
-                    since: fourthUpdateTime,
-                    id: "9",
-                    status: {
-                        deleted: true,
-                    },
-                });
-                approvalTweetData.updates.push({
-                    type: "new_tweets",
-                    since: fourthUpdateTime,
-                    tag: "tagged",
-                    startIdx: 5,
-                });
-            });
-
-            it("adds an update noting fresh tagged tweet is deleted", function() {
-                expect(tweetSearcher.getTweetData().updates).toEqual(approvalTweetData.updates);
-            });
-
-            it("doesn't add an update noting fresh official tweet is deleted", function() {
-                expect(tweetSearcher.getTweetData().updates).toEqual(approvalTweetData.updates);
-            });
-
-            it("still returns the full list of tweets", function() {
-                expect(tweetSearcher.getTweetData().tweets).toEqual(approvalTweetData.tweets);
             });
         });
     });
