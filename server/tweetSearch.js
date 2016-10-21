@@ -7,7 +7,6 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
     var blockedUsers = [];
     var speakers = [];
     var officialUser;
-    var inApprovalMode = false;
 
     var rateLimitDir = "./server/temp/";
     var rateLimitFile = rateLimitDir + "rateLimitRemaining.json";
@@ -39,18 +38,6 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
         if (tweets.length === 0) {
             return;
         }
-        if (inApprovalMode && tag !== "official") {
-            tweets.forEach(function(tweet) {
-                tweetUpdates.push({
-                    type: "tweet_status",
-                    since: new Date(),
-                    id: tweet.id_str,
-                    status: {
-                        deleted: true
-                    },
-                });
-            });
-        }
         tweetUpdates.push({
             type: "new_tweets",
             since: new Date(),
@@ -58,10 +45,6 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
             startIdx: tweetStore.length,
         });
         tweetStore = tweetStore.concat(tweets);
-    }
-
-    function setApprovalMode(approveTweets) {
-        inApprovalMode = approveTweets;
     }
 
     function updateInteractions(visibleTweets, callback) {
@@ -271,8 +254,7 @@ module.exports = function(client, fs, eventConfigFile, mkdirp) {
         removeSpeaker: removeSpeaker,
         displayBlockedTweet: displayBlockedTweet,
         setRetweetDisplayStatus: setRetweetDisplayStatus,
-        updateInteractions: updateInteractions,
-        setApprovalMode: setApprovalMode
+        updateInteractions: updateInteractions
     };
 
     function checkRateLimitSafety(callback) {
