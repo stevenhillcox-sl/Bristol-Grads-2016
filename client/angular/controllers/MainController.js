@@ -425,6 +425,10 @@
             }
         };
 
+        $scope.getTweetMargin = function() {
+            return tweetMargin;
+        }
+
         $scope.getTweetDimensions = function(tweet) {
             if ($scope.isMobile) {
                 return {
