@@ -11,10 +11,9 @@
 		<md-card
 			flex
 			class="tweet tweet-container"
-			ng-style="getTweetDimensions(tweet)"
 			ng-include="'/templates/tweet/tweet.html'"
-			ng-repeat="tweet in displayColumn | limitTo: getLimit($index)"
-			ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}">
+			ng-repeat="tweet in displayColumn | limitTo: getLimit($index) track by tweet.id_str"
+			ng-class="['tweet-' + $parent.$parent.$index + '-' + tweet.slotCount, {disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}]">
 		</md-card>
 		<md-button ng-if="adminView && displayColumn.length - getLimit($index) > 0" class="md-accent" ng-click="increaseLimit($index)">
 			{{ displayColumn.length - getLimit($index) }} more tweets not shown
