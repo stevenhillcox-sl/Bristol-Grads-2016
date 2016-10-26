@@ -12,16 +12,16 @@
 .tweet.ng-leave.ng-leave-active {
   transition: 1.5s ease all;
   max-height: 0;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-top: 0;
+  margin-bottom: 0;
   overflow-y: hidden;
   transform: rotateX(90deg);
 }
 .tweet.ng-leave,
 .tweet.ng-enter.ng-enter-active {
   transition: 1.5s ease all;
-  margin-top: 12px !important;
-  margin-bottom: 12px !important;
+  margin-top: 12px;
+  margin-bottom: 12px;
   max-height: 360px;
   transform: rotateX(0deg);
 }

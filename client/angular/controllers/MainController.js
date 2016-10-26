@@ -36,6 +36,9 @@
 
         //defines the space between all tweets on the wall
         var tweetMargin = 12;
+        var tweetWidth = 0;
+        var maxTweetSlotSize = 2;
+        var tweetSlotSizes = [];
 
         $scope.tweets = [];
         var changedTweets = {};
@@ -71,6 +74,8 @@
         $scope.screenWidth = $window.innerWidth ||
             $document.documentElement.clientWidth ||
             $document.body.clientWidth;
+
+        $scope.tweetSizeStyles = "";
 
         var tweetViews = {
             client: {
@@ -162,6 +167,10 @@
                         slots: 4,
                         extraContentSpacing: 0
                     }]);
+                    calcTweetDimensions([{
+                        slots: 4,
+                        extraContentSpacing: 0
+                    }]);
                 } else {
                     $scope.screenHeight = $window.innerHeight ||
                         $document.documentElement.clientHeight ||
@@ -179,7 +188,9 @@
                     });
 
                     setTweetDimensions($scope.displayColumns, tweetViews[getCurrentTweetView()].columnDataList);
+                    calcTweetDimensions(tweetViews[getCurrentTweetView()].columnDataList);
                 }
+                calcTweetSizeStyles();
             }
             Object.keys(vm.redisplayFlags).forEach(function(key) {
                 vm.redisplayFlags[key] = false;
@@ -214,35 +225,49 @@
         function setTweetDimensions(displayColumns, columnDataList) {
 
             var baseColumnWidth = getTweetWidth($scope.screenWidth, columnDataList);
+            tweetWidth = baseColumnWidth;
             displayColumns.forEach(function(tweetColumn, colIdx) {
-                var baseSlotHeight = getTweetHeight($scope.screenHeight, columnDataList, colIdx);
+                var baseSlotHeight = getTweetHeight($scope.screenHeight, columnDataList[colIdx]);
                 tweetColumn.forEach(function(tweet) {
                     //tweets with pictures have as much room as two normal tweets + the space between them
                     tweet.displayHeightPx = showTweetImage(tweet) ?
                         ((baseSlotHeight * 2) + (tweetMargin * 2)) :
                         baseSlotHeight;
                     tweet.displayWidthPx = baseColumnWidth;
+                    tweet.slotCount = showTweetImage(tweet) ? 2 : 1;
                 });
             });
             logoBoxWidth = baseColumnWidth;
-            logoBoxHeight = getTweetHeight($scope.screenHeight, [{
+            logoBoxHeight = getTweetHeight($scope.screenHeight, {
                 slots: getSlotsBasedOnScreenHeight(),
                 extraContentSpacing: 0
-            }], 0);
+            });
 
+        }
+
+        function calcTweetDimensions(columnDataList) {
+            var baseColumnWidth = getTweetWidth($scope.screenWidth, columnDataList);
+            tweetSlotSizes = [];
+            columnDataList.forEach(function(columnData, idx) {
+                tweetSlotSizes.push([]);
+                var baseSlotHeight = getTweetHeight($scope.screenHeight, columnData);
+                for (var slotSize = 1; slotSize <= maxTweetSlotSize; slotSize++) {
+                    tweetSlotSizes[idx].push((baseSlotHeight * slotSize) + (tweetMargin * 2 * (slotSize - 1)));
+                }
+            });
         }
 
         function getTweetWidth(width, columnDataList) {
             return (width - //total screen width
-                    (2 * tweetMargin * columnDataList.length)) / //remove total size of margins between columns
+                (2 * tweetMargin * columnDataList.length)) / //remove total size of margins between columns
                 columnDataList.length; //divide remaining space between columns
         }
 
-        function getTweetHeight(height, columnDataList, colIdx) {
+        function getTweetHeight(height, columnData) {
             return ((height - //the total screen height
-                    (2 * tweetMargin * columnDataList[colIdx].slots) - //remove total size of margins between tweets
-                    (2 * tweetMargin * columnDataList[colIdx].extraContentSpacing)) / //remove any space taken up by extra content
-                (columnDataList[colIdx].slots + columnDataList[colIdx].extraContentSpacing)); //divide the remaining available space between slots
+                (2 * tweetMargin * columnData.slots) - //remove total size of margins between tweets
+                (2 * tweetMargin * columnData.extraContentSpacing)) / //remove any space taken up by extra content
+                (columnData.slots + columnData.extraContentSpacing)); //divide the remaining available space between slots
         }
 
         function getSlotsBasedOnScreenHeight() {
@@ -425,9 +450,28 @@
             }
         };
 
+        function calcTweetSizeStyles() {
+            var tweetStyles = [];
+            tweetSlotSizes.forEach(function(columnSlotSizes, columnIdx) {
+                columnSlotSizes.forEach(function(slotSize, slotIdx) {
+                    var tweetClass = "tweet-" + columnIdx + "-" + (slotIdx + 1);
+                    var tweetStyle = "." + tweetClass + " {\n" +
+                        "height: " + slotSize + "px;\n" +
+                        "width: " + tweetWidth + "px;\n" +
+                        "margin-top: " + tweetMargin + "px;\n" + 
+                        "margin-bottom: " + tweetMargin + "px;\n" +
+                        "margin-left: " + tweetMargin + "px;\n" +
+                        "margin-right: " + tweetMargin + "px;\n" +
+                        "}";
+                    tweetStyles.push(tweetStyle);
+                });
+            });
+            $scope.tweetSizeStyles = tweetStyles.join("\n");
+        }
+
         $scope.getTweetMargin = function() {
             return tweetMargin;
-        }
+        };
 
         $scope.getTweetDimensions = function(tweet) {
             if ($scope.isMobile) {
