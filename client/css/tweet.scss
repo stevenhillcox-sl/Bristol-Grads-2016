@@ -6,24 +6,7 @@
 .tweet {
   border-radius: 10px; 
   opacity: 1;
-}
-
-.tweet.ng-enter,
-.tweet.ng-leave.ng-leave-active {
-  transition: 1.5s ease all;
-  max-height: 0;
-  margin-top: 0;
-  margin-bottom: 0;
   overflow-y: hidden;
-  transform: rotateX(90deg);
-}
-.tweet.ng-leave,
-.tweet.ng-enter.ng-enter-active {
-  transition: 1.5s ease all;
-  margin-top: 12px;
-  margin-bottom: 12px;
-  max-height: 360px;
-  transform: rotateX(0deg);
 }
 
 .header-name {

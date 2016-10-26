@@ -463,7 +463,25 @@
                         "margin-left: " + tweetMargin + "px;\n" +
                         "margin-right: " + tweetMargin + "px;\n" +
                         "}";
+                    var outAnimStyle = "." + tweetClass + ".ng-enter,\n" +
+                        "." + tweetClass + ".ng-leave.ng-leave-active {\n" +
+                        "transition: 1.5s ease all;\n" +
+                        "max-height: 0;\n" +
+                        "margin-top: 0;\n" +
+                        "margin-bottom: 0;\n" +
+                        "transform: rotateX(90deg);\n" +
+                        "}";
+                    var inAnimStyle = "." + tweetClass + ".ng-leave,\n" +
+                        "." + tweetClass + ".ng-enter.ng-enter-active {\n" +
+                        "transition: 1.5s ease all;\n" +
+                        "max-height: " + slotSize + "px;\n" +
+                        "margin-top: " + tweetMargin + "px;\n" +
+                        "margin-bottom: " + tweetMargin + "px;\n" +
+                        "transform: rotateX(0deg);\n" +
+                        "}";
                     tweetStyles.push(tweetStyle);
+                    tweetStyles.push(outAnimStyle);
+                    tweetStyles.push(inAnimStyle);
                 });
             });
             $scope.tweetSizeStyles = tweetStyles.join("\n");
