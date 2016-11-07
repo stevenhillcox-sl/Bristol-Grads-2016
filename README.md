@@ -1,5 +1,32 @@
 # Bristol-Grads-2016
 
+Technologies
+---
+
+Frontend : Angular 1
+Backend : Node js
+Testing : Jasmine (frontend & backend)
+Grunt used as a task runner
+Webpack used for bundling
+Sass used for styling
+
+Requirements
+---
+
+Node js
+
+Installation
+---
+
+- Clone the repo
+- Run `npm install`
+- Set up API credentials and config files as described below
+- By default `grunt` will run linting checks and all tests
+- To bundle and start the server run `grunt build && npm start`
+- Access main page on [localhost:8080]: https://localhost:8080
+- Access admin page on [localhost:8080/dash]: https://localhost:8080/dash
+
+
 API credentials
 ---
 
