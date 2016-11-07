@@ -39,3 +39,34 @@ Generate your own access token and save it in the environment variable `TWITTER_
 Sign-in for the admin dash is done with any google hosted email address.
 Set up google API credentials for the app as described [here](https://developers.google.com/identity/sign-in/web/devconsole-project).
 Save your client ID in the environment variable `TWEET_WALL_OAUTH_CLIENT_ID` and your client secret in `TWEET_WALL_OAUTH_SECRET`.
+
+Server config
+---
+
+On startup, the server will load a set of JSON configuration files from `server/config/`.
+The configuration files currently used are `adminConfig.json` and `eventConfig.json`.
+Files with these exact names must be present in the config directory, and no keys may be omitted from the files.
+Valid example config files can be found in `server/config/examples/`.
+
+`adminConfig.json` has the following format:
+
+```JSON5
+{
+  // An array of google-powered email addresses which are authorized to use the admin page
+  "emails": ["example@gmail.com", "example@scottlogic.com"]
+}
+```
+
+`eventConfig.json` has the following format:
+```JSON5
+{ 
+  // An array of hashtags, where tweets that use these hashtags will be displayed by the twitter wall
+  "hashtags":["#bristech", "#bristech2016"],
+  // An array of twitter users, where tweets that mention these users will be displayed by the twitter wall
+  "mentions":["@bristech"],
+  // A twitter user, where all tweets from the user will be displayed by the twitter wall
+  "officialUser":"bristech",
+  // An array of users, where tweets from these users that use any of the above hashtags will be prioritised by the twitter wall
+  "speakers":["Aprill13", "danfairs"]
+}
+```

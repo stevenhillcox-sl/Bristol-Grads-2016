@@ -4,7 +4,8 @@ node_modules/
 bundle/
 _SpecRunner.html
 server/temp/
-server/config/
+server/config/*
+!server/config/examples/
 server/logs/
 client/css/*.css
 client/css/*.map
