@@ -34,6 +34,7 @@
             []
         ];
 
+        //slots per column depends on screen height
         $scope.slotBreakpoints = [100, 400, 600, 800, 1280];
 
         //defines the space between all tweets on the wall
@@ -56,10 +57,6 @@
             return !((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet);
         };
 
-        $scope.hiddenTweets = function(tweet) {
-            return !(!((tweet.blocked && !tweet.display) || tweet.deleted || tweet.hide_retweet));
-        };
-
         $scope.secondLogo = 0; //1 to display, 0 to hide
 
         // Ordering function such that newer tweets precede older tweets
@@ -70,6 +67,7 @@
         var pinnedOrdering = function(tweetA, tweetB) {
             return tweetB.pinTime.getTime() - tweetA.pinTime.getTime();
         };
+
         $scope.screenHeight = $window.innerHeight ||
             $document.documentElement.clientHeight ||
             $document.body.clientHeight;
@@ -437,28 +435,6 @@
             return tweets;
         };
 
-        $scope.getFontSize = function(tweet) {
-            if ($scope.verySmallScreen() && tweetInfoService.tweetHasImage(tweet, adminViewEnabled())) {
-                return {
-                    "font-size": "small"
-                };
-            }
-            if (!$scope.isMobile) {
-                var size;
-                var charCount = tweet.displayText.toString().split("").length;
-                if (charCount < 85) {
-                    size = "xx-large";
-                } else if (charCount < 120) {
-                    size = "x-large";
-                } else {
-                    size = "large";
-                }
-                return {
-                    "font-size": size
-                };
-            }
-        };
-
         function calcTweetSizeStyles() {
             var tweetStyles = [];
             tweetSlotSizes.forEach(function(columnSlotSizes, columnIdx) {
@@ -496,19 +472,9 @@
             $scope.tweetSizeStyles = tweetStyles.join("\n");
         }
 
-        $scope.getTweetDimensions = function(tweet) {
-            if ($scope.isMobile || $scope.isMobileClient) {
-                return {
-                    "width": tweetWidth + "px",
-                };
-            }
+        $scope.getMobileTweetWidth = function(tweet) {
             return {
-                "height": tweet.displayHeightPx + "px",
-                "width": tweet.displayWidthPx + "px",
-                "margin-top": tweetMargin + "px",
-                "margin-bottom": tweetMargin + "px",
-                "margin-left": tweetMargin + "px",
-                "margin-right": tweetMargin + "px"
+                "width": tweetWidth + "px",
             };
         };
 

@@ -6,7 +6,7 @@
                 <md-card
                     flex
                     class="tweet-container"
-                    ng-style="getTweetDimensions(tweet)"
+                    ng-style="getMobileTweetWidth(tweet)"
                     ng-include="'/templates/tweet/tweet.html'"
                     ng-repeat="tweet in displayColumns[0]"
                     ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}">
@@ -31,7 +31,7 @@
                 <md-card
                     flex
                     class="tweet-container"
-                    ng-style="getTweetDimensions(tweet)"
+                    ng-style="getMobileTweetWidth(tweet)"
                     ng-include="'/templates/tweet/tweet.html'"
                     ng-repeat="tweet in displayColumns[1] | tweetSearchFilter:tweetSearchQuery"
                     ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}">
@@ -56,7 +56,7 @@
                 <md-card
                     flex
                     class="tweet-container"
-                    ng-style="getTweetDimensions(tweet)"
+                    ng-style="getMobileTweetWidth(tweet)"
                     ng-include="'/templates/tweet/tweet.html'"
                     ng-repeat="tweet in displayColumns[2] | tweetSearchFilter:tweetSearchQuery"
                     ng-class="{disabled : tweet.deleted, blocked: tweet.blocked&&!tweet.display, 'retweet-hidden':tweet.hide_retweet}">

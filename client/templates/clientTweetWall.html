@@ -32,7 +32,7 @@
         <md-card
             flex
             class="tweet-container"
-            ng-style="getTweetDimensions(tweet)"
+            ng-style="getMobileTweetWidth(tweet)"
             ng-include="'/templates/tweet/tweet.html'"
             ng-repeat="tweet in onscreenTweets">
         </md-card>
