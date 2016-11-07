@@ -70,3 +70,16 @@ Valid example config files can be found in `server/config/examples/`.
   "speakers":["Aprill13", "danfairs"]
 }
 ```
+
+Deployment info
+---
+
+Included with the project are a set of files used for deploying to AWS:
+`circle.yml` for automatic deployment with CircleCI,
+`appspec.yml` for specifying deployment behaviour,
+and the lifecycle scripts `app-config.sh`, `app-start.sh`, and `app-stop.sh`.
+Notably these configuration files and scripts are intended for use with Linux only.
+
+As the configuration files and environment variables used by the server are not stored in the repository, it is necessary to provide these files on the deployment instance.
+This is done by creating a folder `/home/ec2-user/TwitterWallConfig/` on the instance, containing all the files in `server/config/` (with the same names), and a script `env.sh` that exports all the necessary environment variables.
+
