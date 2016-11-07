@@ -50,7 +50,7 @@ Valid example config files can be found in `server/config/examples/`.
 
 `adminConfig.json` has the following format:
 
-```
+```JSON5
 {
   // An array of google-powered email addresses which are authorized to use the admin page
   "emails": ["example@gmail.com", "example@scottlogic.com"]
@@ -58,7 +58,7 @@ Valid example config files can be found in `server/config/examples/`.
 ```
 
 `eventConfig.json` has the following format:
-```
+```JSON5
 { 
   // An array of hashtags, where tweets that use these hashtags will be displayed by the twitter wall
   "hashtags":["#bristech", "#bristech2016"],
