@@ -23,8 +23,8 @@ Installation
 - Set up API credentials and config files as described below
 - By default `grunt` will run linting checks and all tests
 - To bundle and start the server run `grunt build && npm start`
-- Access main page on [localhost:8080]: https://localhost:8080
-- Access admin page on [localhost:8080/dash]: https://localhost:8080/dash
+- Access main page on [localhost:8080](https://localhost:8080)
+- Access admin page on [localhost:8080/dash](https://localhost:8080/dash)
 
 
 API credentials
