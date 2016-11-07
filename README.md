@@ -66,7 +66,7 @@ Valid example config files can be found in `server/config/examples/`.
   "mentions":["@bristech"],
   // A twitter user, where all tweets from the user will be displayed by the twitter wall
   "officialUser":"bristech",
-  // An array of users, where tweets from these users that use any of the above hashtags will be prioritized by the twitter wall
+  // An array of users, where tweets from these users that use any of the above hashtags will be prioritised by the twitter wall
   "speakers":["Aprill13", "danfairs"]
 }
 ```
