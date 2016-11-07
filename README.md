@@ -20,7 +20,7 @@ Installation
 
 - Clone the repo
 - Run `npm install`
-- Set up API credentials and configs as described below
+- Set up API credentials and config files as described below
 - By default `grunt` will run linting checks and all tests
 - To bundle and start the server run `grunt build && npm start`
 - Access main page on [localhost:8080]: https://localhost:8080
