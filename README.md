@@ -3,12 +3,12 @@
 Technologies
 ---
 
-Frontend : Angular 1
-Backend : Node js
-Testing : Jasmine (frontend & backend)
-Grunt used as a task runner
-Webpack used for bundling
-Sass used for styling
+- Frontend : Angular 1
+- Backend : Node js
+- Testing : Jasmine (frontend & backend)
+- Grunt used as a task runner
+- Webpack used for bundling
+- Sass used for styling
 
 Requirements
 ---
