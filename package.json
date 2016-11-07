@@ -22,7 +22,6 @@
     "grunt-cli": "^1.2.0",
     "grunt-contrib-jasmine": "^1.0.3",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
     "grunt-jasmine-nodejs": "^1.5.4",
     "grunt-jsbeautifier": "^0.2.13",
     "grunt-jscs": "^3.0.1",
@@ -30,7 +29,6 @@
     "grunt-webpack": "^1.0.14",
     "js-beautify": "^1.6.4",
     "phantomjs-polyfill-find-index": "^1.0.1",
-    "sinon": "^1.17.5",
     "style-loader": "^0.13.1",
     "webpack": "1.13.2",
     "webpack-dev-server": "^1.16.1"
