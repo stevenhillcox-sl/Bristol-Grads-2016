@@ -13,7 +13,7 @@ Technologies
 Requirements
 ---
 
-Node js
+Node.js
 
 Installation
 ---
