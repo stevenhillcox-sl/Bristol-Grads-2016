@@ -52,7 +52,7 @@ Valid example config files can be found in `server/config/examples/`.
 
 ```JSON5
 {
-  // An array of google-powered email addresses which are authorized to use the admin page
+  // An array of google-powered email addresses which are authorised to use the admin page
   "emails": ["example@gmail.com", "example@scottlogic.com"]
 }
 ```
